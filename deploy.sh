@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-REPO_URL="https://github.com/YOUR_USERNAME/YOUR_REPO.git"
+REPO_URL="https://github.com/NothingToSayLGFM/axinia-shop"
 APP_DIR="/opt/axinia"
 
 echo "=== Axinia Market — Initial Deploy ==="
