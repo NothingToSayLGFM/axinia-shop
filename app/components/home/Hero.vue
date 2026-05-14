@@ -45,6 +45,12 @@ const advantages = [
           <NuxtImg
             src="/images/hero.png"
             alt="Протигаз"
+            format="webp"
+            quality="85"
+            width="320"
+            height="320"
+            sizes="256px sm:320px"
+            preload
             class="absolute inset-0 z-10 m-auto h-64 w-64 object-contain object-center drop-shadow-xl sm:h-80 sm:w-80"
           />
         </div>

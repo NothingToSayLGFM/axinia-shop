@@ -16,6 +16,12 @@ defineProps<{
       :src="image"
       alt=""
       role="presentation"
+      format="webp"
+      quality="80"
+      width="400"
+      height="300"
+      sizes="100vw sm:50vw md:25vw"
+      loading="lazy"
       class="absolute inset-0 h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-110"
     />
     <div

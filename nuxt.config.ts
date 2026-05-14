@@ -36,5 +36,8 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/admin/**': { appMiddleware: ['admin'] },
+    '/_ipx/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
+    '/images/**': { headers: { 'cache-control': 'public, max-age=604800' } },
+    '/uploads/**': { headers: { 'cache-control': 'public, max-age=604800' } },
   }
 })
