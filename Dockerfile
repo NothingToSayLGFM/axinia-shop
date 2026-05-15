@@ -9,8 +9,11 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ARG NODE_MEM=1536
+ARG NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+ENV NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 RUN npx prisma generate
-RUN NODE_OPTIONS="--max-old-space-size=1536" npm run build
+RUN NODE_OPTIONS="--max-old-space-size=${NODE_MEM}" npm run build
 
 FROM node:22-alpine
 WORKDIR /app

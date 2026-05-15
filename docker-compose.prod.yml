@@ -1,6 +1,6 @@
 services:
   app:
-    build: .
+    image: ${DOCKER_IMAGE}
     container_name: axinia-app
     restart: unless-stopped
     ports:
