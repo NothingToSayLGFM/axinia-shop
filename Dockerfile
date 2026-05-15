@@ -21,7 +21,6 @@ ENV NODE_ENV=production
 COPY --from=builder /app/.output ./output
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
+RUN npm install -g prisma@7.8.0
 EXPOSE 3000
-CMD ["node", "./output/server/index.mjs"]
+CMD ["sh", "-c", "prisma migrate deploy && node ./output/server/index.mjs"]
