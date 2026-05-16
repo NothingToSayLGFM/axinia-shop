@@ -21,6 +21,10 @@ export default defineNuxtConfig({
     disallow: ['/admin', '/sign-in', '/checkout'],
   },
 
+  seo: {
+    redirectToCanonicalSiteUrl: false,
+  },
+
   app: {
     head: {
       link: [
