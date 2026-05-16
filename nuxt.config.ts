@@ -21,6 +21,14 @@ export default defineNuxtConfig({
     disallow: ['/admin', '/sign-in', '/checkout'],
   },
 
+  app: {
+    head: {
+      link: [
+        { rel: 'preconnect', href: 'https://alive-bluebird-89.clerk.accounts.dev' },
+      ]
+    }
+  },
+
   modules: [
     '@nuxt/a11y',
     '@nuxt/fonts',
@@ -55,6 +63,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    '/': { isr: 60 },
     '/admin/**': { appMiddleware: ['admin'] },
     '/_ipx/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
     '/images/**': { headers: { 'cache-control': 'public, max-age=604800' } },
