@@ -50,6 +50,10 @@ export default defineNuxtConfig({
     novaPostApiKey: '',
   },
 
+  nitro: {
+    compressPublicAssets: true,
+  },
+
   routeRules: {
     '/admin/**': { appMiddleware: ['admin'] },
     '/_ipx/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
