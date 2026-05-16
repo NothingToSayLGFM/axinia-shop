@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-background border-r flex flex-col fixed inset-y-0">
       <div class="h-16 flex items-center gap-2 px-6 border-b">
-        <NuxtImg src="/images/logo.png" alt="Аксінья-Маркет" class="h-8 w-auto" />
+        <NuxtImg src="/images/logo.webp" alt="Аксінья-Маркет" format="webp" quality="85" width="64" class="h-8 w-auto" />
         <span class="font-semibold text-sm">Адмінка</span>
       </div>
 

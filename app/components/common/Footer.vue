@@ -25,7 +25,7 @@ const infoLinks = [
         <!-- Про нас -->
         <div class="flex flex-col gap-4">
           <NuxtLink to="/" class="flex items-center gap-3">
-            <NuxtImg src="/images/logo.png" alt="Аксінья-Маркет" class="h-10 w-auto" />
+            <NuxtImg src="/images/logo.webp" alt="Аксінья-Маркет" format="webp" quality="85" width="80" class="h-10 w-auto" />
             <span class="text-sm font-bold leading-tight">ПП Аксінья-Маркет</span>
           </NuxtLink>
           <p class="text-sm leading-relaxed text-muted-foreground">

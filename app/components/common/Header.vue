@@ -28,7 +28,6 @@ const route = useRoute()
             format="webp"
             quality="85"
             width="88"
-            height="44"
             class="h-11 w-auto"
           />
           <span class="hidden text-base font-bold leading-tight sm:block">
