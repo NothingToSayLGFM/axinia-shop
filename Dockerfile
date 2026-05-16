@@ -21,6 +21,6 @@ ENV NODE_ENV=production
 COPY --from=builder /app/.output ./output
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-RUN npm install -g prisma@7.8.0 && npm install sharp
+RUN npm install -g prisma@7.8.0 && npm install sharp --include=optional
 EXPOSE 3000
 CMD ["sh", "-c", "prisma migrate deploy && node ./output/server/index.mjs"]
