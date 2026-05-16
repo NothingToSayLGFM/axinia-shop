@@ -28,7 +28,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [
-        { rel: 'preconnect', href: 'https://alive-bluebird-89.clerk.accounts.dev' },
+        { rel: 'preconnect', href: 'https://alive-bluebird-89.clerk.accounts.dev', crossorigin: '' },
       ]
     }
   },
