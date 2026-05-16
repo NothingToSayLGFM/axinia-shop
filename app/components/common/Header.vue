@@ -22,7 +22,15 @@ const route = useRoute()
 
         <!-- Лого + Название -->
         <NuxtLink to="/" class="flex shrink-0 items-center gap-3 focus:outline-none">
-          <NuxtImg src="/images/logo.png" alt="Аксінья-Маркет" class="h-11 w-auto" />
+          <NuxtImg
+            src="/images/logo.webp"
+            alt="Аксінья-Маркет"
+            format="webp"
+            quality="85"
+            width="88"
+            height="44"
+            class="h-11 w-auto"
+          />
           <span class="hidden text-base font-bold leading-tight sm:block">
             ПП Аксінья-Маркет
           </span>

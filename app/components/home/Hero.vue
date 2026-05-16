@@ -43,7 +43,7 @@ const advantages = [
       <div class="flex shrink-0 items-center justify-center lg:flex-1">
         <div class="relative flex h-72 w-72 items-center justify-center rounded-full bg-muted sm:h-96 sm:w-96">
           <NuxtImg
-            src="/images/hero.png"
+            src="/images/hero.webp"
             alt="Протигаз"
             format="webp"
             quality="85"
@@ -51,6 +51,7 @@ const advantages = [
             height="320"
             sizes="256px sm:320px"
             preload
+            fetchpriority="high"
             class="absolute inset-0 z-10 m-auto h-64 w-64 object-contain object-center drop-shadow-xl sm:h-80 sm:w-80"
           />
         </div>

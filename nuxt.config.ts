@@ -5,6 +5,22 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  site: {
+    url: 'https://axinia.com.ua',
+    name: 'ПП Аксінья-Маркет',
+    description: 'Магазин захисного спорядження — балістичний захист, протигази, бронежилети та інше спорядження',
+    defaultLocale: 'uk',
+  },
+
+  sitemap: {
+    sources: ['/api/__sitemap__/urls'],
+    exclude: ['/admin/**', '/sign-in/**', '/checkout'],
+  },
+
+  robots: {
+    disallow: ['/admin', '/sign-in', '/checkout'],
+  },
+
   modules: [
     '@nuxt/a11y',
     '@nuxt/fonts',
