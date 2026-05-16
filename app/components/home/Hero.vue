@@ -47,8 +47,10 @@ const advantages = [
             alt="Протигаз"
             format="webp"
             quality="70"
-            width="400"
-            sizes="256px sm:400px"
+            width="256"
+            height="256"
+            densities="x1 x2"
+            sizes="256px sm:320px"
             preload
             fetchpriority="high"
             class="absolute inset-0 z-10 m-auto h-64 w-64 object-contain object-center drop-shadow-xl sm:h-80 sm:w-80"
