@@ -25,6 +25,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/.output ./output
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
 COPY --from=prod-deps /app/node_modules ./node_modules
 EXPOSE 3000
 CMD ["sh", "-c", "npx prisma migrate deploy && node ./output/server/index.mjs"]

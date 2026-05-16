@@ -47,6 +47,7 @@
     "radix-vue": "^1.9.17",
     "reka-ui": "^2.9.7",
     "satori": "^0.26.0",
+    "dotenv": "^17.4.2",
     "sharp": "^0.34.0",
     "tailwind-merge": "^3.5.0",
     "tailwindcss-animate": "^1.0.7",
@@ -57,7 +58,6 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.0",
-    "dotenv": "^17.4.2",
     "shadcn-nuxt": "^2.6.2",
     "tailwindcss": "^4.3.0"
   }
