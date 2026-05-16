@@ -38,6 +38,7 @@ jobs:
             NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          no-cache: true
 
       - name: Set up SSH
         run: |
