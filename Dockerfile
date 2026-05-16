@@ -5,6 +5,11 @@ COPY prisma ./prisma/
 COPY prisma.config.ts ./
 RUN npm ci
 
+FROM node:22-alpine AS prod-deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm pkg delete scripts.postinstall && npm ci --omit=dev
+
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -20,7 +25,6 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/.output ./output
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/prisma.config.ts ./prisma.config.ts
-RUN npm install -g prisma@7.8.0 && npm install sharp --include=optional
+COPY --from=prod-deps /app/node_modules ./node_modules
 EXPOSE 3000
-CMD ["sh", "-c", "prisma migrate deploy && node ./output/server/index.mjs"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node ./output/server/index.mjs"]
