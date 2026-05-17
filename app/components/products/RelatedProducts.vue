@@ -25,6 +25,7 @@ const products = computed(() =>
         :key="p.id"
         :id="p.id"
         :slug="p.slug"
+        :category-slug="p.categories?.[0]?.slug ?? null"
         :images="p.images"
         :name="p.name"
         :description="p.description"

@@ -4,6 +4,7 @@ import { skipHydrate } from 'pinia'
 export interface CartItem {
   id: number
   slug: string | null
+  categorySlug: string | null
   name: string
   price: number
   image: string | null

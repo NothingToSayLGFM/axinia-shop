@@ -1,6 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
-useHead({ title: 'Гарантія / обмін та повернення — Axinia Market' })
+useSeoMeta({
+  title: 'Гарантія та повернення — ПП Аксінья-Маркет',
+  description: 'Умови гарантії, обміну та повернення товарів ПП Аксінья-Маркет. Захист ваших прав як покупця.',
+})
 </script>
 
 <template>

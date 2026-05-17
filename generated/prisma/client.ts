@@ -67,6 +67,11 @@ export type Order = Prisma.OrderModel
  */
 export type StaticPage = Prisma.StaticPageModel
 /**
+ * Model Review
+ * 
+ */
+export type Review = Prisma.ReviewModel
+/**
  * Model OrderItem
  * 
  */

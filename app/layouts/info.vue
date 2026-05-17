@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { Toaster } from '@/components/ui/sonner'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 const route = useRoute()
+const router = useRouter()
 
 const infoLinks = [
   { label: 'Про нас', to: '/about' },
@@ -11,8 +13,13 @@ const infoLinks = [
   { label: 'Контактна інформація', to: '/contacts' },
   { label: 'Знижки', to: '/discount' },
   { label: 'Угода користувача', to: '/terms' },
+  { label: 'Відгуки про магазин', to: '/vidhuky-pro-mahazyn' },
   { label: 'Мапа сайту', to: '/sitemap' },
 ]
+
+function onSelectChange(to: string) {
+  router.push(to)
+}
 </script>
 
 <template>
@@ -20,10 +27,25 @@ const infoLinks = [
     <CommonHeader />
     <main class="flex-1 bg-muted/40">
       <CommonContainer class="py-8">
+
+        <!-- Mobile select -->
+        <div class="mb-6 md:hidden">
+          <Select :model-value="route.path" @update:model-value="onSelectChange">
+            <SelectTrigger aria-label="Розділи інформації" class="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="link in infoLinks" :key="link.to" :value="link.to">
+                {{ link.label }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         <div class="flex gap-8 items-start">
-          <!-- Sidebar -->
-          <aside class="w-52 shrink-0">
-            <nav class="flex flex-col overflow-hidden rounded-lg border bg-background">
+          <!-- Desktop sidebar -->
+          <aside class="hidden md:block w-52 shrink-0 sticky top-24 self-start">
+            <nav aria-label="Розділи інформації" class="flex flex-col overflow-hidden rounded-lg border bg-background">
               <NuxtLink
                 v-for="link in infoLinks"
                 :key="link.to"
@@ -45,6 +67,7 @@ const infoLinks = [
             <slot />
           </div>
         </div>
+
       </CommonContainer>
     </main>
     <CommonFooter />

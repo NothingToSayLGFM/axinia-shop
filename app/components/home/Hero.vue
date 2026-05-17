@@ -48,7 +48,6 @@ const advantages = [
             format="webp"
             quality="70"
             width="256"
-            height="256"
             densities="x1 x2"
             sizes="256px sm:320px"
             preload

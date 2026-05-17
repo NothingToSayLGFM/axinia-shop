@@ -1,6 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
-useHead({ title: 'Угода користувача — Axinia Market' })
+useSeoMeta({
+  title: 'Угода користувача — ПП Аксінья-Маркет',
+  description: 'Угода користувача інтернет-магазину ПП Аксінья-Маркет. Умови використання сайту та здійснення замовлень.',
+})
 </script>
 
 <template>

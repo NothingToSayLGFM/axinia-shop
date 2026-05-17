@@ -275,7 +275,7 @@ async function updateStatus(status: OrderStatus) {
               <Button
                 v-if="selectedOrder.status !== 'delivered' && selectedOrder.status !== 'cancelled'"
                 size="sm"
-                class="bg-green-600 hover:bg-green-700 text-white"
+                class="bg-green-700 hover:bg-green-800 text-white"
                 :disabled="isUpdating"
                 @click="updateStatus('delivered')"
               >

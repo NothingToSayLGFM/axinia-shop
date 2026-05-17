@@ -56,6 +56,7 @@ export const ModelName = {
   ProductImage: 'ProductImage',
   Order: 'Order',
   StaticPage: 'StaticPage',
+  Review: 'Review',
   OrderItem: 'OrderItem'
 } as const
 
@@ -149,6 +150,19 @@ export const StaticPageScalarFieldEnum = {
 } as const
 
 export type StaticPageScalarFieldEnum = (typeof StaticPageScalarFieldEnum)[keyof typeof StaticPageScalarFieldEnum]
+
+
+export const ReviewScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  text: 'text',
+  rating: 'rating',
+  isPublished: 'isPublished',
+  createdAt: 'createdAt'
+} as const
+
+export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
 export const OrderItemScalarFieldEnum = {

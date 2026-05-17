@@ -13,6 +13,16 @@ const phoneHref = 'tel:+380675303930'
 
 const mobileMenuOpen = ref(false)
 const route = useRoute()
+const router = useRouter()
+const searchFocusTrigger = useState('searchFocusTrigger', () => 0)
+
+function handleSearchClick() {
+  if (route.path === '/shop') {
+    searchFocusTrigger.value++
+  } else {
+    router.push('/shop')
+  }
+}
 </script>
 
 <template>
@@ -61,10 +71,8 @@ const route = useRoute()
 
         <!-- Правый блок: поиск + корзина + гамбургер -->
         <div class="flex items-center gap-1">
-          <Button variant="ghost" size="icon" class="h-10 w-10 cursor-pointer" aria-label="Пошук" as-child>
-            <NuxtLink to="/shop">
-              <Icon name="lucide:search" class="h-6 w-6" />
-            </NuxtLink>
+          <Button variant="ghost" size="icon" class="h-10 w-10 cursor-pointer" aria-label="Пошук" @click="handleSearchClick">
+            <Icon name="lucide:search" class="h-6 w-6" />
           </Button>
 
           <!-- Единственная инстанция корзины -->

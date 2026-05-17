@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   site: {
     url: 'https://axinia.com.ua',
     name: 'ПП Аксінья-Маркет',
-    description: 'Магазин захисного спорядження — балістичний захист, протигази, бронежилети та інше спорядження',
+    description: 'Магазин засобів індивідуального захисту — протигази, респіратори, захисні костюми, газоаналізатори, засоби тактичної медицини. Безкоштовна доставка по Україні.',
     defaultLocale: 'uk',
   },
 
@@ -29,6 +29,11 @@ export default defineNuxtConfig({
     head: {
       link: [
         { rel: 'preconnect', href: 'https://alive-bluebird-89.clerk.accounts.dev', crossorigin: '' },
+        { rel: 'icon', type: 'image/x-icon', href: '/favicons/favicon.ico' },
+        { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicons/favicon-32x32.png' },
+        { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png' },
+        { rel: 'apple-touch-icon', sizes: '180x180', href: '/favicons/apple-touch-icon.png' },
+        { rel: 'manifest', href: '/favicons/site.webmanifest' },
       ]
     }
   },
@@ -67,8 +72,23 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    // Rendering strategies
     '/': { isr: 60 },
+    '/shop/**': { isr: 300 },
+    '/about': { isr: 3600 },
+    '/delivery': { isr: 3600 },
+    '/payment': { isr: 3600 },
+    '/warranty': { isr: 3600 },
+    '/contacts': { isr: 3600 },
+    '/discount': { isr: 3600 },
+    '/terms': { isr: 3600 },
+    '/sitemap': { isr: 3600 },
+    '/vidhuky-pro-mahazyn': { isr: 300 },
+
+    // Auth & admin
     '/admin/**': { appMiddleware: ['admin'] },
+
+    // Static asset caching
     '/_ipx/**': { headers: { 'cache-control': 'public, max-age=31536000, immutable' } },
     '/images/**': { headers: { 'cache-control': 'public, max-age=604800' } },
     '/uploads/**': { headers: { 'cache-control': 'public, max-age=604800' } },

@@ -35,7 +35,7 @@ const infoLinks = [
 
         <!-- Товари -->
         <div class="flex flex-col gap-4">
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-foreground">Товари</h3>
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-foreground">Товари</h2>
           <ul class="flex flex-col gap-2">
             <li v-for="cat in categories" :key="cat.slug">
               <NuxtLink
@@ -50,7 +50,7 @@ const infoLinks = [
 
         <!-- Інформація -->
         <div class="flex flex-col gap-4">
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-foreground">Інформація</h3>
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-foreground">Інформація</h2>
           <ul class="flex flex-col gap-2">
             <li v-for="link in infoLinks" :key="link.to">
               <NuxtLink
@@ -65,7 +65,7 @@ const infoLinks = [
 
         <!-- Контакти -->
         <div class="flex flex-col gap-4">
-          <h3 class="text-sm font-semibold uppercase tracking-wider text-foreground">Контакти</h3>
+          <h2 class="text-sm font-semibold uppercase tracking-wider text-foreground">Контакти</h2>
           <div class="flex flex-col gap-3">
             <a
               :href="phoneHref"

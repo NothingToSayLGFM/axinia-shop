@@ -1,4 +1,5 @@
 <template>
+  <TooltipProvider>
   <div class="space-y-6">
     <!-- Create form -->
     <Card>
@@ -52,18 +53,48 @@
             </div>
           </div>
           <div class="flex items-center gap-4">
-            <label class="flex items-center gap-2 cursor-pointer text-sm">
-              <input type="checkbox" v-model="form.isActive" class="rounded" />
-              Активний
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer text-sm">
-              <input type="checkbox" v-model="form.inStock" class="rounded" />
-              В наявності
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer text-sm">
-              <input type="checkbox" v-model="form.isHit" class="rounded" />
-              Хіт продаж
-            </label>
+            <div class="flex items-center gap-1.5">
+              <label class="flex items-center gap-2 cursor-pointer text-sm">
+                <input type="checkbox" v-model="form.isActive" class="rounded" />
+                Активний
+              </label>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <Icon name="lucide:circle-help" class="h-3.5 w-3.5 text-muted-foreground cursor-help shrink-0" />
+                </TooltipTrigger>
+                <TooltipContent class="max-w-52">
+                  Товар відображається у каталозі. Якщо прибрати — покупці не побачать товар на сайті.
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label class="flex items-center gap-2 cursor-pointer text-sm">
+                <input type="checkbox" v-model="form.inStock" class="rounded" />
+                В наявності
+              </label>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <Icon name="lucide:circle-help" class="h-3.5 w-3.5 text-muted-foreground cursor-help shrink-0" />
+                </TooltipTrigger>
+                <TooltipContent class="max-w-52">
+                  Показує бейдж «В наявності» на сторінці товару. Якщо прибрати — бейдж «Немає в наявності».
+                </TooltipContent>
+              </Tooltip>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <label class="flex items-center gap-2 cursor-pointer text-sm">
+                <input type="checkbox" v-model="form.isHit" class="rounded" />
+                Хіт продаж
+              </label>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <Icon name="lucide:circle-help" class="h-3.5 w-3.5 text-muted-foreground cursor-help shrink-0" />
+                </TooltipTrigger>
+                <TooltipContent class="max-w-52">
+                  Товар потрапляє в секцію «Хіт продаж» на головній сторінці сайту.
+                </TooltipContent>
+              </Tooltip>
+            </div>
             <Button type="submit" :disabled="saving">
               <Icon name="lucide:plus" class="h-4 w-4 mr-2" />
               {{ saving ? 'Зберігаємо...' : 'Додати' }}
@@ -218,18 +249,48 @@
           </div>
         </div>
         <div class="flex items-center gap-4">
-          <label class="flex items-center gap-2 cursor-pointer text-sm">
-            <input type="checkbox" v-model="editForm.isActive" class="rounded" />
-            Активний
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer text-sm">
-            <input type="checkbox" v-model="editForm.inStock" class="rounded" />
-            В наявності
-          </label>
-          <label class="flex items-center gap-2 cursor-pointer text-sm">
-            <input type="checkbox" v-model="editForm.isHit" class="rounded" />
-            Хіт продаж
-          </label>
+          <div class="flex items-center gap-1.5">
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+              <input type="checkbox" v-model="editForm.isActive" class="rounded" />
+              Активний
+            </label>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Icon name="lucide:circle-help" class="h-3.5 w-3.5 text-muted-foreground cursor-help shrink-0" />
+              </TooltipTrigger>
+              <TooltipContent class="max-w-52">
+                Товар відображається у каталозі. Якщо прибрати — покупці не побачать товар на сайті.
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+              <input type="checkbox" v-model="editForm.inStock" class="rounded" />
+              В наявності
+            </label>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Icon name="lucide:circle-help" class="h-3.5 w-3.5 text-muted-foreground cursor-help shrink-0" />
+              </TooltipTrigger>
+              <TooltipContent class="max-w-52">
+                Показує бейдж «В наявності» на сторінці товару. Якщо прибрати — бейдж «Немає в наявності».
+              </TooltipContent>
+            </Tooltip>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <label class="flex items-center gap-2 cursor-pointer text-sm">
+              <input type="checkbox" v-model="editForm.isHit" class="rounded" />
+              Хіт продаж
+            </label>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Icon name="lucide:circle-help" class="h-3.5 w-3.5 text-muted-foreground cursor-help shrink-0" />
+              </TooltipTrigger>
+              <TooltipContent class="max-w-52">
+                Товар потрапляє в секцію «Хіт продаж» на головній сторінці сайту.
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
         <DialogFooter class="pt-2">
           <Button type="button" variant="outline" @click="editOpen = false">Скасувати</Button>
@@ -240,9 +301,12 @@
       </form>
     </DialogContent>
   </Dialog>
+  </TooltipProvider>
 </template>
 
 <script setup lang="ts">
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+
 interface Category { id: number; name: string; slug: string }
 interface ProductImage { id: number; url: string; isMain: boolean; sortOrder: number }
 interface Product {

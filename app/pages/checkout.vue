@@ -506,7 +506,7 @@ function clearCity() {
             <!-- Info -->
             <div class="flex flex-1 flex-col gap-1.5 min-w-0">
               <NuxtLink
-                :to="`/shop/${item.slug ?? item.id}`"
+                :to="item.categorySlug ? `/shop/${item.categorySlug}/${item.slug ?? item.id}` : `/shop/${item.slug ?? item.id}`"
                 class="text-sm font-medium leading-tight line-clamp-2 hover:underline cursor-pointer"
               >{{ item.name }}</NuxtLink>
               <div class="flex items-center gap-1">

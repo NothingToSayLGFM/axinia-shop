@@ -6,6 +6,7 @@ import { toast } from 'vue-sonner'
 const props = defineProps<{
   id: number
   slug?: string | null
+  categorySlug?: string | null
   images?: { url: string; isMain: boolean }[]
   name?: string | null
   description?: string | null
@@ -20,6 +21,12 @@ const mainImage = computed(() =>
 
 const cartItem = computed(() => cart.items.find(i => i.id === props.id))
 
+const productUrl = computed(() =>
+  props.categorySlug
+    ? `/shop/${props.categorySlug}/${props.slug ?? props.id}`
+    : `/shop/${props.slug ?? props.id}`
+)
+
 function formatPrice(price: string | number | null | undefined) {
   if (!price) return null
   return `${Number(price).toLocaleString('uk-UA')} грн`
@@ -29,6 +36,7 @@ function addToCart() {
   cart.addItem({
     id: props.id,
     slug: props.slug ?? null,
+    categorySlug: props.categorySlug ?? null,
     name: props.name ?? 'Без назви',
     price: Number(props.price ?? 0),
     image: mainImage.value,
@@ -40,7 +48,7 @@ function addToCart() {
 
 <template>
   <Card class="group overflow-hidden pt-0 flex flex-col">
-    <NuxtLink :to="`/shop/${slug ?? id}`" class="relative overflow-hidden aspect-[4/3] bg-muted cursor-pointer block">
+    <NuxtLink :to="productUrl" class="relative overflow-hidden aspect-[4/3] bg-muted cursor-pointer block">
       <NuxtImg
         v-if="mainImage"
         :src="mainImage"
@@ -59,7 +67,7 @@ function addToCart() {
     </NuxtLink>
 
     <CardHeader>
-      <NuxtLink :to="`/shop/${slug ?? id}`" class="cursor-pointer hover:underline">
+      <NuxtLink :to="productUrl" class="cursor-pointer hover:underline">
         <CardTitle class="text-base leading-snug">{{ name ?? 'Без назви' }}</CardTitle>
       </NuxtLink>
       <p v-if="description" class="text-sm text-muted-foreground line-clamp-3">{{ description }}</p>
@@ -100,11 +108,11 @@ function addToCart() {
           </Button>
         </div>
         <Button v-else variant="outline" class="w-full" size="sm" as-child>
-          <NuxtLink :to="`/shop/${slug ?? id}`">Детальніше</NuxtLink>
+          <NuxtLink :to="productUrl">Детальніше</NuxtLink>
         </Button>
         <template #fallback>
           <Button variant="outline" class="w-full" size="sm" as-child>
-            <NuxtLink :to="`/shop/${slug ?? id}`">Детальніше</NuxtLink>
+            <NuxtLink :to="productUrl">Детальніше</NuxtLink>
           </Button>
         </template>
       </ClientOnly>

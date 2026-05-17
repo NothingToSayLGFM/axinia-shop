@@ -56,6 +56,7 @@ const navItems = [
   { to: '/admin/categories', label: 'Категорії', icon: 'lucide:folder' },
   { to: '/admin/products', label: 'Товари', icon: 'lucide:package' },
   { to: '/admin/orders', label: 'Замовлення', icon: 'lucide:shopping-bag' },
+  { to: '/admin/reviews', label: 'Відгуки', icon: 'lucide:star' },
   { to: '/admin/info', label: 'Інформація', icon: 'lucide:file-text' },
 ]
 
@@ -64,6 +65,7 @@ const pageTitles: Record<string, string> = {
   '/admin/categories': 'Категорії',
   '/admin/products': 'Товари',
   '/admin/orders': 'Замовлення',
+  '/admin/reviews': 'Відгуки',
   '/admin/info': 'Інформація',
 }
 

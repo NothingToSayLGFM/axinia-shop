@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { toast } from 'vue-sonner'
 
 const route = useRoute()
+const categorySlug = route.params.category as string
 const slug = route.params.slug as string
 
 const { data: product, error } = await useFetch(`/api/products/slug/${slug}`)
@@ -19,12 +20,15 @@ if (error.value) {
   throw createError({ statusCode: 404, message: 'Товар не знайдено' })
 }
 
+const { data: category } = await useFetch(`/api/categories/slug/${categorySlug}`)
+
 const images = computed(() => (product.value as any)?.images ?? [])
 const hasMultipleImages = computed(() => images.value.length > 1)
 const mainImage = computed(() => images.value.find((i: any) => i.isMain)?.url ?? images.value[0]?.url ?? null)
 
-const categorySlug = computed(() => (product.value as any)?.categories?.[0]?.slug ?? null)
+const productCategorySlug = computed(() => (product.value as any)?.categories?.[0]?.slug ?? null)
 const productId = computed(() => (product.value as any)?.id ?? null)
+const categoryName = computed(() => (category.value as any)?.name ?? null)
 
 const cart = useCartStore()
 
@@ -38,6 +42,7 @@ function addToCart() {
   cart.addItem({
     id: p.id,
     slug: p.slug ?? null,
+    categorySlug: categorySlug ?? null,
     name: p.name ?? 'Без назви',
     price: Number(p.price ?? 0),
     image: mainImage.value,
@@ -45,14 +50,67 @@ function addToCart() {
   toast.success('Додано до кошика', { description: p.name ?? 'Товар' })
   cart.isOpen = true
 }
+
+useSeoMeta({
+  title: computed(() => {
+    const name = (product.value as any)?.name
+    return name ? `${name} — купити | ПП Аксінья-Маркет` : 'ПП Аксінья-Маркет'
+  }),
+  description: computed(() => {
+    const p = product.value as any
+    if (p?.description) return p.description
+    const name = p?.name ?? ''
+    const price = p?.price ? `за ціною ${Number(p.price).toLocaleString('uk-UA')} грн` : ''
+    return `Купити ${name} ${price}. Безкоштовна доставка по Україні. ПП Аксінья-Маркет — засоби індивідуального захисту.`.replace(/\s+/g, ' ').trim()
+  }),
+  ogType: 'product',
+  ogImage: computed(() => mainImage.value ?? '/images/logo.webp'),
+  twitterCard: 'summary_large_image',
+})
+
+useSchemaOrg([
+  defineProduct({
+    name: () => (product.value as any)?.name ?? '',
+    description: () => (product.value as any)?.description ?? undefined,
+    image: () => images.value.map((img: any) => img.url),
+    sku: () => (product.value as any)?.article ?? undefined,
+    offers: defineOffer({
+      price: () => (product.value as any)?.price ? Number((product.value as any).price) : 0,
+      priceCurrency: 'UAH',
+      availability: () => (product.value as any)?.inStock ? 'InStock' : 'OutOfStock',
+    }),
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      { name: 'Головна', item: '/' },
+      { name: 'Товари', item: '/shop' },
+      { name: () => categoryName.value ?? '', item: () => `/shop/${categorySlug}` },
+      { name: () => (product.value as any)?.name ?? '', item: () => `/shop/${categorySlug}/${slug}` },
+    ],
+  }),
+])
 </script>
 
 <template>
   <CommonContainer class="py-8">
+    <!-- Breadcrumbs -->
+    <nav class="mb-6 flex items-center gap-2 text-sm text-muted-foreground" aria-label="Хлібні крихти">
+      <NuxtLink to="/" class="hover:text-foreground transition-colors">Головна</NuxtLink>
+      <span>›</span>
+      <NuxtLink to="/shop" class="hover:text-foreground transition-colors">Товари</NuxtLink>
+      <span v-if="categoryName">›</span>
+      <NuxtLink
+        v-if="categoryName"
+        :to="`/shop/${categorySlug}`"
+        class="hover:text-foreground transition-colors"
+      >{{ categoryName }}</NuxtLink>
+      <span>›</span>
+      <span class="text-foreground">{{ (product as any)?.name }}</span>
+    </nav>
+
     <div v-if="product" class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
       <!-- Левая колонка: изображение / слайдер -->
       <div>
-        <!-- Слайдер если картинок больше одной -->
         <Carousel v-if="hasMultipleImages" class="w-full">
           <CarouselContent>
             <CarouselItem v-for="img in images" :key="img.id">
@@ -69,7 +127,6 @@ function addToCart() {
           <CarouselNext class="right-3" />
         </Carousel>
 
-        <!-- Одна картинка -->
         <div v-else-if="images.length === 1" class="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
           <NuxtImg
             :src="images[0].url"
@@ -78,7 +135,6 @@ function addToCart() {
           />
         </div>
 
-        <!-- Нет картинок -->
         <div v-else class="aspect-[4/3] rounded-xl bg-muted flex items-center justify-center">
           <Icon name="lucide:package" class="h-24 w-24 text-muted-foreground/20" />
         </div>
@@ -91,9 +147,9 @@ function addToCart() {
         </h1>
 
         <div class="flex items-center gap-2">
-          <Badge v-if="(product as any).inStock" class="bg-green-600 text-white hover:bg-green-700">В наявності</Badge>
+          <Badge v-if="(product as any).inStock" class="bg-green-700 text-white hover:bg-green-800">В наявності</Badge>
           <Badge v-else variant="secondary" class="text-muted-foreground">Немає в наявності</Badge>
-          <Badge class="bg-green-600 text-white hover:bg-green-700">Безкоштовна доставка</Badge>
+          <Badge class="bg-green-700 text-white hover:bg-green-800">Безкоштовна доставка</Badge>
         </div>
 
         <p v-if="(product as any).description" class="text-muted-foreground leading-relaxed">
@@ -122,8 +178,8 @@ function addToCart() {
 
     <!-- Схожі товари -->
     <ProductsRelatedProducts
-      v-if="categorySlug && productId"
-      :category-slug="categorySlug"
+      v-if="productCategorySlug && productId"
+      :category-slug="productCategorySlug"
       :exclude-id="productId"
     />
   </CommonContainer>

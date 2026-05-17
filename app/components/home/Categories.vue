@@ -15,7 +15,7 @@ const pending = computed(() => status.value === 'pending')
       <CommonSimpleCard
         v-for="cat in categories"
         :key="cat.slug"
-        :to="`/shop?category=${cat.slug}`"
+        :to="`/shop/${cat.slug}`"
         :image="cat.image"
         :name="cat.name"
       />

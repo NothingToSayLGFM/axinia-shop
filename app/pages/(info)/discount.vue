@@ -1,6 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
-useHead({ title: 'Знижки — Axinia Market' })
+useSeoMeta({
+  title: 'Знижки та акції — ПП Аксінья-Маркет',
+  description: 'Актуальні знижки та спеціальні пропозиції на засоби індивідуального захисту від ПП Аксінья-Маркет.',
+})
 </script>
 
 <template>

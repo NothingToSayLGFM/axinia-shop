@@ -1,6 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
-useHead({ title: 'Мапа сайту — Axinia Market' })
+useSeoMeta({
+  title: 'Мапа сайту — ПП Аксінья-Маркет',
+  description: 'Структура сайту ПП Аксінья-Маркет. Всі розділи та сторінки магазину засобів індивідуального захисту.',
+})
 </script>
 
 <template>

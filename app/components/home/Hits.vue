@@ -9,6 +9,7 @@ interface Product {
   description: string | null
   price: string | number | null
   images: ProductImage[]
+  categories: { slug: string }[]
 }
 
 const { data: rawProducts, status } = await useFetch('/api/products', { query: { isHit: 'true' } })
@@ -37,6 +38,7 @@ const products = computed(() => rawProducts.value as unknown as Product[])
         :key="product.id"
         :id="product.id"
         :slug="product.slug"
+        :category-slug="product.categories?.[0]?.slug ?? null"
         :images="product.images"
         :name="product.name"
         :description="product.description"

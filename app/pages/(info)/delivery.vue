@@ -1,6 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
-useHead({ title: 'Доставка — Axinia Market' })
+useSeoMeta({
+  title: 'Доставка — ПП Аксінья-Маркет',
+  description: 'Умови та терміни доставки товарів ПП Аксінья-Маркет. Безкоштовна доставка Новою Поштою по всій Україні.',
+})
 </script>
 
 <template>

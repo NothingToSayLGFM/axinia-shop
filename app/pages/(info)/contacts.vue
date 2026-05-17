@@ -1,6 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
-useHead({ title: 'Контактна інформація — Axinia Market' })
+useSeoMeta({
+  title: 'Контакти — ПП Аксінья-Маркет',
+  description: 'Контактна інформація ПП Аксінья-Маркет. Телефон: +38 (067) 530-39-30. Замовляйте засоби захисту з доставкою по Україні.',
+})
 </script>
 
 <template>

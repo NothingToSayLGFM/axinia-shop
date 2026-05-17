@@ -8,7 +8,13 @@ export default defineEventHandler(async (event) => {
   const minPrice = query.minPrice ? Number(query.minPrice) : undefined
   const maxPrice = query.maxPrice ? Number(query.maxPrice) : undefined
   const page = query.page ? Number(query.page) : undefined
-  const limit = 10
+  const sort = query.sort as string | undefined
+  const limit = query.limit ? Number(query.limit) : 10
+
+  const orderBy =
+    sort === 'price_asc' ? { price: 'asc' as const } :
+    sort === 'price_desc' ? { price: 'desc' as const } :
+    { createdAt: 'desc' as const }
 
   let resolvedCategoryIds: number[] = categoryId ? [categoryId] : []
   if (categorySlugs.length > 0 && resolvedCategoryIds.length === 0) {
@@ -42,7 +48,7 @@ export default defineEventHandler(async (event) => {
       prisma.product.findMany({
         where,
         include: { categories: true, images: { orderBy: { sortOrder: 'asc' } } },
-        orderBy: { createdAt: 'desc' },
+        orderBy,
         skip: (page - 1) * limit,
         take: limit,
       }),
