@@ -10,6 +10,7 @@ export default defineNuxtConfig({
     name: 'ПП Аксінья-Маркет',
     description: 'Магазин засобів індивідуального захисту — протигази, респіратори, захисні костюми, газоаналізатори, засоби тактичної медицини. Безкоштовна доставка по Україні.',
     defaultLocale: 'uk',
+    indexable: true,
   },
 
   sitemap: {
@@ -39,6 +40,7 @@ export default defineNuxtConfig({
   },
 
   modules: [
+    '@nuxtjs/color-mode',
     '@nuxt/a11y',
     '@nuxt/fonts',
     '@nuxt/eslint',
@@ -51,6 +53,12 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
     'shadcn-nuxt'
   ],
+
+  colorMode: {
+    preference: 'light',
+    fallback: 'light',
+    classSuffix: '',
+  },
 
   shadcn: {
     prefix: '',

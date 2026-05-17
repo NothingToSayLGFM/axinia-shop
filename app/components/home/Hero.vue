@@ -46,10 +46,9 @@ const advantages = [
             src="/images/hero.webp"
             alt="Протигаз"
             format="webp"
-            quality="70"
+            quality="55"
             width="256"
-            densities="x1 x2"
-            sizes="256px sm:320px"
+            sizes="(max-width: 640px) 256px, 320px"
             preload
             fetchpriority="high"
             class="absolute inset-0 z-10 m-auto h-64 w-64 object-contain object-center drop-shadow-xl sm:h-80 sm:w-80"
