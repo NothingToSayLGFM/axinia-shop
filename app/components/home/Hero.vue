@@ -40,7 +40,7 @@ const advantages = [
         </a>
       </div>
 
-      <div class="flex shrink-0 items-center justify-center lg:flex-1">
+      <div class="hidden sm:flex shrink-0 items-center justify-center lg:flex-1">
         <div class="relative flex h-72 w-72 items-center justify-center rounded-full bg-muted sm:h-96 sm:w-96">
           <NuxtImg
             src="/images/hero.webp"
