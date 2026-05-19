@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
 useSeoMeta({
-  title: 'Знижки та акції — ПП Аксінья-Маркет',
+  title: 'Знижки та акції',
   description: 'Актуальні знижки та спеціальні пропозиції на засоби індивідуального захисту від ПП Аксінья-Маркет.',
 })
 </script>

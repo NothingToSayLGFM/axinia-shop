@@ -29,7 +29,6 @@ export default defineNuxtConfig({
   app: {
     head: {
       link: [
-        { rel: 'preconnect', href: 'https://alive-bluebird-89.clerk.accounts.dev', crossorigin: '' },
         { rel: 'icon', type: 'image/x-icon', href: '/favicons/favicon.ico' },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicons/favicon-32x32.png' },
         { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png' },

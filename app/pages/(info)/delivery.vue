@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
 useSeoMeta({
-  title: 'Доставка — ПП Аксінья-Маркет',
+  title: 'Доставка',
   description: 'Умови та терміни доставки товарів ПП Аксінья-Маркет. Безкоштовна доставка Новою Поштою по всій Україні.',
 })
 </script>

@@ -84,7 +84,7 @@ useSchemaOrg([
 ])
 
 useSeoMeta({
-  title: computed(() => `${categoryName.value} — купити | ПП Аксінья-Маркет`),
+  title: computed(() => `${categoryName.value} — купити`),
   description: computed(() => `Купити ${categoryName.value.toLowerCase()} за вигідними цінами в ПП Аксінья-Маркет. Великий вибір, безкоштовна доставка по Україні.`),
   ogType: 'website',
   ogImage: computed(() => (category.value as any)?.image ?? '/images/logo.webp'),

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 useSeoMeta({
-  title: 'Каталог засобів захисту — ПП Аксінья-Маркет',
+  title: 'Каталог засобів захисту',
   description: 'Каталог засобів захисту: протигази, респіратори, газоаналізатори, захисні костюми, фільтри, засоби тактичної медицини. Фільтрація за ціною та категорією.',
   ogType: 'website',
   ogImage: '/images/logo.webp',

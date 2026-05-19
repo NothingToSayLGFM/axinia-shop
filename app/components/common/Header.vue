@@ -38,6 +38,8 @@ function handleSearchClick() {
             format="webp"
             quality="85"
             width="88"
+            fetchpriority="high"
+            preload
             class="h-11 w-auto"
           />
           <span class="hidden text-base font-bold leading-tight sm:block">

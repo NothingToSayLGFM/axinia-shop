@@ -54,7 +54,7 @@ function addToCart() {
 useSeoMeta({
   title: computed(() => {
     const name = (product.value as any)?.name
-    return name ? `${name} — купити | ПП Аксінья-Маркет` : 'ПП Аксінья-Маркет'
+    return name ? `${name} — купити` : ''
   }),
   description: computed(() => {
     const p = product.value as any
@@ -63,7 +63,7 @@ useSeoMeta({
     const price = p?.price ? `за ціною ${Number(p.price).toLocaleString('uk-UA')} грн` : ''
     return `Купити ${name} ${price}. Безкоштовна доставка по Україні. ПП Аксінья-Маркет — засоби індивідуального захисту.`.replace(/\s+/g, ' ').trim()
   }),
-  ogType: 'product',
+  ogType: 'website',
   ogImage: computed(() => mainImage.value ?? '/images/logo.webp'),
   twitterCard: 'summary_large_image',
 })
@@ -77,7 +77,7 @@ useSchemaOrg([
     offers: defineOffer({
       price: () => (product.value as any)?.price ? Number((product.value as any).price) : 0,
       priceCurrency: 'UAH',
-      availability: () => (product.value as any)?.inStock ? 'InStock' : 'OutOfStock',
+      availability: () => (product.value as any)?.inStock ? 'InStock' : undefined,
     }),
   }),
   defineBreadcrumb({

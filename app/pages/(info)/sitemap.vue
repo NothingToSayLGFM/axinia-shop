@@ -1,7 +1,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
 useSeoMeta({
-  title: 'Мапа сайту — ПП Аксінья-Маркет',
+  title: 'Мапа сайту',
   description: 'Структура сайту ПП Аксінья-Маркет. Всі розділи та сторінки магазину засобів індивідуального захисту.',
 })
 </script>
