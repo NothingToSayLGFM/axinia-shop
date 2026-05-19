@@ -1,5 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
+const { data: page } = await useFetch('/api/pages/about')
 useSeoMeta({
   title: 'Про нас',
   description: 'Дізнайтесь про ПП Аксінья-Маркет — постачальника засобів індивідуального захисту. Комплексне обслуговування відділів ЦО та охорони праці.',
@@ -14,5 +15,6 @@ useSeoMeta({
       <span class="text-foreground">Про нас</span>
     </nav>
     <h1 class="text-3xl font-bold">Про нас</h1>
+    <div v-if="page?.content" class="prose prose-neutral mt-8 max-w-none" v-html="page.content" />
   </div>
 </template>

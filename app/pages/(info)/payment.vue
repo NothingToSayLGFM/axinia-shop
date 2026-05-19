@@ -1,5 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
+const { data: page } = await useFetch('/api/pages/payment')
 useSeoMeta({
   title: 'Оплата і доставка',
   description: 'Способи оплати та умови доставки в ПП Аксінья-Маркет. Оплата онлайн, накладним платежем або безготівковим розрахунком.',
@@ -14,5 +15,6 @@ useSeoMeta({
       <span class="text-foreground">Оплата і доставка</span>
     </nav>
     <h1 class="text-3xl font-bold">Оплата і доставка</h1>
+    <div v-if="page?.content" class="prose prose-neutral mt-8 max-w-none" v-html="page.content" />
   </div>
 </template>

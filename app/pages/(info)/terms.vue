@@ -1,5 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
+const { data: page } = await useFetch('/api/pages/terms')
 useSeoMeta({
   title: 'Угода користувача',
   description: 'Угода користувача інтернет-магазину ПП Аксінья-Маркет. Умови використання сайту та здійснення замовлень.',
@@ -14,5 +15,6 @@ useSeoMeta({
       <span class="text-foreground">Угода користувача</span>
     </nav>
     <h1 class="text-3xl font-bold">Угода користувача</h1>
+    <div v-if="page?.content" class="prose prose-neutral mt-8 max-w-none" v-html="page.content" />
   </div>
 </template>

@@ -5,7 +5,7 @@ const navLinks = [
   { label: 'Головна', to: '/' },
   { label: 'Товари', to: '/shop' },
   { label: 'Про нас', to: '/about' },
-  { label: 'Контакти', to: '/contacts' },
+  { label: 'Контакти', to: '/contact' },
 ]
 
 const phone = '+38 (067) 530-39-30'

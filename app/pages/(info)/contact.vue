@@ -1,5 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
+const { data: page } = await useFetch('/api/pages/contacts')
 useSeoMeta({
   title: 'Контакти',
   description: 'Контактна інформація ПП Аксінья-Маркет. Телефон: +38 (067) 530-39-30. Замовляйте засоби захисту з доставкою по Україні.',
@@ -14,5 +15,6 @@ useSeoMeta({
       <span class="text-foreground">Контактна інформація</span>
     </nav>
     <h1 class="text-3xl font-bold">Контактна інформація</h1>
+    <div v-if="page?.content" class="prose prose-neutral mt-8 max-w-none" v-html="page.content" />
   </div>
 </template>

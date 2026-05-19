@@ -1,5 +1,6 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'info' })
+const { data: page } = await useFetch('/api/pages/delivery')
 useSeoMeta({
   title: 'Доставка',
   description: 'Умови та терміни доставки товарів ПП Аксінья-Маркет. Безкоштовна доставка Новою Поштою по всій Україні.',
@@ -14,5 +15,6 @@ useSeoMeta({
       <span class="text-foreground">Доставка</span>
     </nav>
     <h1 class="text-3xl font-bold">Доставка</h1>
+    <div v-if="page?.content" class="prose prose-neutral mt-8 max-w-none" v-html="page.content" />
   </div>
 </template>

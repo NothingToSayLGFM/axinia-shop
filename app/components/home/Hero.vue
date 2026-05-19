@@ -18,7 +18,7 @@ const advantages = [
     icon: 'lucide:headphones',
     label: 'Постійна підтримка',
     description: 'Консультації 24/7, допомога у виборі',
-    to: '/contacts',
+    to: '/contact',
   },
 ]
 </script>

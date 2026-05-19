@@ -86,7 +86,7 @@ export default defineNuxtConfig({
     '/delivery': { isr: 3600 },
     '/payment': { isr: 3600 },
     '/warranty': { isr: 3600 },
-    '/contacts': { isr: 3600 },
+    '/contact': { isr: 3600 },
     '/discount': { isr: 3600 },
     '/terms': { isr: 3600 },
     '/sitemap': { isr: 3600 },

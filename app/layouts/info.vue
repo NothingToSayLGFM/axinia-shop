@@ -10,7 +10,7 @@ const infoLinks = [
   { label: 'Доставка', to: '/delivery' },
   { label: 'Оплата і доставка', to: '/payment' },
   { label: 'Гарантія / обмін та повернення', to: '/warranty' },
-  { label: 'Контактна інформація', to: '/contacts' },
+  { label: 'Контактна інформація', to: '/contact' },
   { label: 'Знижки', to: '/discount' },
   { label: 'Угода користувача', to: '/terms' },
   { label: 'Відгуки про магазин', to: '/vidhuky-pro-mahazyn' },
