@@ -3,7 +3,7 @@ import { z } from "zod";
 const schema = z.object({
   name: z.string().min(1),
   slug: z.string().min(1),
-  image: z.string().optional(),
+  image: z.string().nullable().optional(),
   sortOrder: z.number().int().default(0),
 });
 
