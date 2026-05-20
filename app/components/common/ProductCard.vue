@@ -61,8 +61,8 @@ function addToCart() {
         loading="lazy"
         class="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
       />
-      <div v-else class="h-full w-full flex items-center justify-center bg-muted">
-        <Icon name="lucide:package" class="h-16 w-16 text-muted-foreground/30" />
+      <div v-else class="h-full w-full flex items-center justify-center bg-muted p-8">
+        <NuxtImg src="/images/logo.webp" alt="" role="presentation" format="webp" quality="80" width="200" class="object-contain opacity-30" />
       </div>
     </NuxtLink>
 
