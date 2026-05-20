@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const runtimeConfig = useRuntimeConfig()
+const colorMode = useColorMode()
+colorMode.preference = 'light'
 
 function clerkDomainFromKey(key: string): string | null {
   try {
@@ -14,11 +16,10 @@ function clerkDomainFromKey(key: string): string | null {
 const publishableKey = runtimeConfig.public.clerk?.publishableKey as string | undefined
 const clerkDomain = publishableKey ? clerkDomainFromKey(publishableKey) : null
 
-if (clerkDomain) {
-  useHead({
-    link: [{ rel: 'preconnect', href: `https://${clerkDomain}`, crossorigin: '' }],
-  })
-}
+useHead({
+  meta: [{ name: 'color-scheme', content: 'light' }],
+  ...(clerkDomain ? { link: [{ rel: 'preconnect', href: `https://${clerkDomain}`, crossorigin: '' }] } : {}),
+})
 </script>
 
 <template>
