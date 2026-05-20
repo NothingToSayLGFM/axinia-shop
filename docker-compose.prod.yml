@@ -9,6 +9,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - axinia_uploads:/app/.output/public/uploads
 
   db:
     image: postgres:17-alpine
@@ -28,3 +30,4 @@ services:
 
 volumes:
   axinia_prod_data:
+  axinia_uploads:
