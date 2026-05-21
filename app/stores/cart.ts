@@ -6,7 +6,7 @@ export interface CartItem {
   slug: string | null
   categorySlug: string | null
   name: string
-  price: number
+  price: number | null
   image: string | null
   quantity: number
 }
@@ -16,7 +16,11 @@ export const useCartStore = defineStore('cart', () => {
   const isOpen = ref(false)
 
   const totalItems = computed(() => items.value.reduce((sum, i) => sum + i.quantity, 0))
-  const totalPrice = computed(() => items.value.reduce((sum, i) => sum + i.price * i.quantity, 0))
+  const totalPrice = computed(() =>
+    items.value.reduce((sum, i) => sum + (i.price ?? 0) * i.quantity, 0)
+  )
+  const hasNegotiableItems = computed(() => items.value.some(i => i.price === null))
+  const hasPricedItems = computed(() => items.value.some(i => i.price !== null))
 
   function addItem(product: Omit<CartItem, 'quantity'>) {
     const existing = items.value.find(i => i.id === product.id)
@@ -43,5 +47,5 @@ export const useCartStore = defineStore('cart', () => {
     items.value = []
   }
 
-  return { items: skipHydrate(items), isOpen, totalItems, totalPrice, addItem, removeItem, updateQuantity, clear }
+  return { items: skipHydrate(items), isOpen, totalItems, totalPrice, hasNegotiableItems, hasPricedItems, addItem, removeItem, updateQuantity, clear }
 })

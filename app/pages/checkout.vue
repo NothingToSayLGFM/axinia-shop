@@ -21,6 +21,18 @@ function formatPrice(value: number) {
   return `${value.toLocaleString('uk-UA')} грн`
 }
 
+function formatItemPrice(item: { price: number | null; quantity: number }) {
+  if (item.price === null) return 'Договірна'
+  return formatPrice(item.price * item.quantity)
+}
+
+const totalLabel = computed(() => {
+  if (cart.hasNegotiableItems && !cart.hasPricedItems) return 'Договірна'
+  if (cart.hasNegotiableItems && cart.hasPricedItems)
+    return `≈ ${formatPrice(cart.totalPrice)} (+ договірна)`
+  return formatPrice(cart.totalPrice)
+})
+
 const errors = reactive({
   name: '',
   phone: '',
@@ -101,7 +113,7 @@ async function submitOrder() {
         items: cart.items.map(item => ({
           productId: item.id,
           name: item.name,
-          price: item.price,
+          price: item.price ?? 0,
           quantity: item.quantity,
           image: item.image || undefined,
         })),
@@ -530,7 +542,7 @@ function clearCity() {
                   <Icon name="lucide:plus" class="h-3 w-3" />
                 </Button>
               </div>
-              <p class="text-sm font-semibold">{{ formatPrice(item.price * item.quantity) }}</p>
+              <p class="text-sm font-semibold">{{ formatItemPrice(item) }}</p>
             </div>
 
             <!-- Remove -->
@@ -552,7 +564,7 @@ function clearCity() {
           <div class="px-5 py-4 space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-sm text-muted-foreground">Разом:</span>
-              <span class="text-lg font-bold">{{ formatPrice(cart.totalPrice) }}</span>
+              <span class="text-lg font-bold">{{ totalLabel }}</span>
             </div>
             <Button
               class="w-full"

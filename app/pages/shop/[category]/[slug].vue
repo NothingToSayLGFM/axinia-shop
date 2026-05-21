@@ -44,7 +44,7 @@ function addToCart() {
     slug: p.slug ?? null,
     categorySlug: categorySlug ?? null,
     name: p.name ?? 'Без назви',
-    price: Number(p.price ?? 0),
+    price: p.price ? Number(p.price) : null,
     image: mainImage.value,
   })
   toast.success('Додано до кошика', { description: p.name ?? 'Товар' })
@@ -165,6 +165,14 @@ useSchemaOrg([
             <Icon name="lucide:shopping-cart" class="h-5 w-5" />
             Купити
           </Button>
+          <a
+            v-if="!(product as any).price"
+            href="tel:+380675303930"
+            class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            <Icon name="lucide:phone" class="h-4 w-4" />
+            Запит
+          </a>
         </div>
       </div>
     </div>

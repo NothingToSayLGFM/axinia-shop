@@ -38,7 +38,7 @@ function addToCart() {
     slug: props.slug ?? null,
     categorySlug: props.categorySlug ?? null,
     name: props.name ?? 'Без назви',
-    price: Number(props.price ?? 0),
+    price: props.price ? Number(props.price) : null,
     image: mainImage.value,
   })
   toast.success('Додано до кошика', { description: props.name ?? 'Товар' })
@@ -84,7 +84,16 @@ function addToCart() {
       <span v-if="price" class="text-lg font-bold text-foreground">
         {{ formatPrice(price) }}
       </span>
-      <span v-else class="text-sm text-muted-foreground">Ціна на запит</span>
+      <div v-else class="flex items-center gap-2">
+        <span class="text-sm text-muted-foreground">Ціна на запит</span>
+        <a
+          href="tel:+380675303930"
+          class="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          <Icon name="lucide:phone" class="h-3 w-3" />
+          Запит
+        </a>
+      </div>
     </CardContent>
 
     <CardFooter class="grid grid-cols-2 gap-2">

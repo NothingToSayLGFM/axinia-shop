@@ -12,6 +12,18 @@ const cart = useCartStore()
 function formatPrice(value: number) {
   return `${value.toLocaleString('uk-UA')} грн`
 }
+
+function formatItemPrice(item: { price: number | null; quantity: number }) {
+  if (item.price === null) return 'Договірна'
+  return formatPrice(item.price * item.quantity)
+}
+
+const totalLabel = computed(() => {
+  if (cart.hasNegotiableItems && !cart.hasPricedItems) return 'Договірна'
+  if (cart.hasNegotiableItems && cart.hasPricedItems)
+    return `≈ ${formatPrice(cart.totalPrice)} (+ договірна)`
+  return formatPrice(cart.totalPrice)
+})
 </script>
 
 <template>
@@ -105,7 +117,7 @@ function formatPrice(value: number) {
               </Button>
             </div>
 
-            <p class="text-sm font-semibold">{{ formatPrice(item.price * item.quantity) }}</p>
+            <p class="text-sm font-semibold">{{ formatItemPrice(item) }}</p>
           </div>
 
           <!-- Remove -->
@@ -127,7 +139,7 @@ function formatPrice(value: number) {
         <div class="px-4 py-4 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-sm text-muted-foreground">Разом:</span>
-            <span class="text-lg font-bold">{{ formatPrice(cart.totalPrice) }}</span>
+            <span class="text-lg font-bold">{{ totalLabel }}</span>
           </div>
           <Button class="w-full" size="default" as-child>
             <NuxtLink to="/checkout" @click="cart.isOpen = false">Оформити замовлення</NuxtLink>
