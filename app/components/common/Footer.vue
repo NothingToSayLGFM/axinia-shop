@@ -39,7 +39,7 @@ const infoLinks = [
           <ul class="flex flex-col gap-2">
             <li v-for="cat in categories" :key="cat.slug">
               <NuxtLink
-                :to="`/shop?category=${cat.slug}`"
+                :to="`/shop/${cat.slug}`"
                 class="text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
                 {{ cat.name }}
