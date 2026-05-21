@@ -165,14 +165,12 @@ useSchemaOrg([
             <Icon name="lucide:shopping-cart" class="h-5 w-5" />
             Купити
           </Button>
-          <a
-            v-if="!(product as any).price"
-            href="tel:+380675303930"
-            class="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            <Icon name="lucide:phone" class="h-4 w-4" />
-            Запит
-          </a>
+          <Button v-if="!(product as any).price" size="lg" class="gap-2" as-child>
+            <a href="tel:+380675303930">
+              <Icon name="lucide:phone" class="h-5 w-5" />
+              Запит
+            </a>
+          </Button>
         </div>
       </div>
     </div>

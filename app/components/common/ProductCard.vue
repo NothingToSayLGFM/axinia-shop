@@ -80,15 +80,15 @@ function addToCart() {
       <p v-if="description" class="text-sm text-muted-foreground line-clamp-3">{{ description }}</p>
     </CardHeader>
 
-    <CardContent class="flex-1">
+    <CardContent class="flex-1 flex flex-col justify-end">
       <span v-if="price" class="text-lg font-bold text-foreground">
         {{ formatPrice(price) }}
       </span>
-      <div v-else class="flex items-center gap-2">
+      <div v-else class="grid grid-cols-2 gap-2 items-center">
         <span class="text-sm text-muted-foreground">Ціна на запит</span>
         <a
           href="tel:+380675303930"
-          class="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          class="inline-flex items-center justify-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 h-9"
         >
           <Icon name="lucide:phone" class="h-3 w-3" />
           Запит
