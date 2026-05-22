@@ -115,7 +115,14 @@ useSchemaOrg([
           <CarouselContent>
             <CarouselItem v-for="img in images" :key="img.id">
               <div class="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+                <img
+                  v-if="img.url?.startsWith('/uploads/')"
+                  :src="img.url"
+                  :alt="(product as any).name ?? ''"
+                  class="h-full w-full object-contain"
+                />
                 <NuxtImg
+                  v-else
                   :src="img.url"
                   :alt="(product as any).name ?? ''"
                   class="h-full w-full object-contain"
@@ -128,7 +135,14 @@ useSchemaOrg([
         </Carousel>
 
         <div v-else-if="images.length === 1" class="aspect-[4/3] overflow-hidden rounded-xl bg-muted">
+          <img
+            v-if="images[0].url?.startsWith('/uploads/')"
+            :src="images[0].url"
+            :alt="(product as any).name ?? ''"
+            class="h-full w-full object-contain"
+          />
           <NuxtImg
+            v-else
             :src="images[0].url"
             :alt="(product as any).name ?? ''"
             class="h-full w-full object-contain"
