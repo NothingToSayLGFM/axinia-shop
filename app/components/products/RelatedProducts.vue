@@ -11,9 +11,11 @@ const { data: result } = await useFetch('/api/products', {
   })),
 })
 
-const products = computed(() =>
-  ((result.value as any)?.items ?? []).filter((p: any) => p.id !== props.excludeId).slice(0, 5)
-)
+const products = computed(() => {
+  const raw = result.value as any
+  const items = Array.isArray(raw) ? raw : (raw?.items ?? [])
+  return items.filter((p: any) => p.id !== props.excludeId).slice(0, 5)
+})
 </script>
 
 <template>
