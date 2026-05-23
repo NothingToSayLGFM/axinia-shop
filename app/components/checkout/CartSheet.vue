@@ -7,7 +7,21 @@ import {
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
+import { MIN_QUANTITY, useMinQuantityModal } from '~/composables/useMinQuantityModal'
+
 const cart = useCartStore()
+const { isOpen: minQtyModalOpen } = useMinQuantityModal()
+const router = useRouter()
+
+function goToCheckout() {
+  if (cart.totalItems < MIN_QUANTITY) {
+    cart.isOpen = false
+    minQtyModalOpen.value = true
+    return
+  }
+  cart.isOpen = false
+  router.push('/checkout')
+}
 
 function formatPrice(value: number) {
   return `${value.toLocaleString('uk-UA')} грн`
@@ -147,9 +161,7 @@ const totalLabel = computed(() => {
             <span class="text-sm text-muted-foreground">Разом:</span>
             <span class="text-lg font-bold">{{ totalLabel }}</span>
           </div>
-          <Button class="w-full" size="default" as-child>
-            <NuxtLink to="/checkout" @click="cart.isOpen = false">Оформити замовлення</NuxtLink>
-          </Button>
+          <Button class="w-full" size="default" @click="goToCheckout">Оформити замовлення</Button>
         </div>
       </template>
     </PopoverContent>

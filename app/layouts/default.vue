@@ -14,6 +14,7 @@ import { Toaster } from '@/components/ui/sonner'
     <Teleport to="body">
       <Toaster :rich-colors="true" position="bottom-right" />
       <CookieControl locale="uk" />
+      <CommonMinQuantityModal />
     </Teleport>
   </ClientOnly>
 </template>

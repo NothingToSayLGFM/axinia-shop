@@ -13,6 +13,7 @@ const INFO_PAGES = [
   { slug: 'discount', label: 'Знижки' },
   { slug: 'terms', label: 'Угода користувача' },
   { slug: 'sitemap', label: 'Мапа сайту' },
+  { slug: 'min-quantity', label: 'Модалка «Мінімальна кількість» (показується при спробі зменшити нижче 5 шт.)' },
 ]
 
 const contents = reactive<Record<string, string>>({})

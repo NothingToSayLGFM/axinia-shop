@@ -10,10 +10,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { onClickOutside, useDebounceFn } from '@vueuse/core'
 import { vMaska } from 'maska/vue'
 import { toast } from 'vue-sonner'
+import { MIN_QUANTITY, useMinQuantityModal } from '~/composables/useMinQuantityModal'
 
 useSeoMeta({ title: 'Оформлення замовлення', robots: 'noindex' })
 
 const cart = useCartStore()
+const { isOpen: minQtyModalOpen } = useMinQuantityModal()
 
 const termsOpen = ref(false)
 const { data: termsPage } = await useFetch('/api/pages/terms')
@@ -92,6 +94,10 @@ const isSubmitting = ref(false)
 const orderNumber = ref<number | null>(null)
 
 async function submitOrder() {
+  if (cart.totalItems < MIN_QUANTITY) {
+    minQtyModalOpen.value = true
+    return
+  }
   if (!validateForm()) return
   isSubmitting.value = true
   try {
