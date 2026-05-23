@@ -59,6 +59,43 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
 
+  cookieControl: {
+    locales: ['uk'],
+    cookies: {
+      necessary: [
+        {
+          id: 'necessary',
+          name: { uk: 'Необхідні' },
+          description: { uk: 'Файли cookie для базової роботи сайту та кошика.' },
+          targetCookieIds: ['__session', '__client_uat'],
+        },
+      ],
+      optional: [],
+    },
+    colors: {
+      barBackground: '#09090b',
+      barTextColor: '#fafafa',
+      barButtonColor: '#fafafa',
+      barButtonBackground: '#18181b',
+      barButtonHoverColor: '#fafafa',
+      barButtonHoverBackground: '#27272a',
+      modalBackground: '#ffffff',
+      modalTextColor: '#09090b',
+      modalButtonColor: '#fafafa',
+      modalButtonBackground: '#09090b',
+      modalButtonHoverColor: '#fafafa',
+      modalButtonHoverBackground: '#18181b',
+      modalOverlay: '#09090b',
+      modalOverlayOpacity: 0.5,
+      checkboxActiveBackground: '#09090b',
+      checkboxInactiveBackground: '#e4e4e7',
+      checkboxDisabledBackground: '#d4d4d8',
+      checkboxActiveCircleBackground: '#ffffff',
+      checkboxInactiveCircleBackground: '#ffffff',
+      checkboxDisabledCircleBackground: '#a1a1aa',
+    },
+  },
+
   shadcn: {
     prefix: '',
     componentDir: './app/components/ui'

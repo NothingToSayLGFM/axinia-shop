@@ -48,7 +48,7 @@ function addToCart() {
 
 <template>
   <Card class="group overflow-hidden pt-0 flex flex-col">
-    <NuxtLink :to="productUrl" class="relative overflow-hidden aspect-[4/3] bg-muted cursor-pointer block">
+    <NuxtLink :to="productUrl" :aria-label="name ?? 'Переглянути товар'" class="relative overflow-hidden aspect-[4/3] bg-muted cursor-pointer block">
       <img
         v-if="mainImage?.startsWith('/uploads/')"
         :src="mainImage"

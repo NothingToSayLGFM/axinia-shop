@@ -13,6 +13,7 @@ import { Toaster } from '@/components/ui/sonner'
   <ClientOnly>
     <Teleport to="body">
       <Toaster :rich-colors="true" position="bottom-right" />
+      <CookieControl locale="uk" />
     </Teleport>
   </ClientOnly>
 </template>
