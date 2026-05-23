@@ -53,7 +53,7 @@ const { data: categories } = await useFetch('/api/categories')
 
 const productsQuery = computed(() => ({
   page: page.value,
-  limit: 10,
+  limit: 9,
   ...(search.value && { search: search.value }),
   ...(selectedCategories.value.length > 0 && { category: selectedCategories.value.join(',') }),
   ...(priceRange.value[0] > 0 && { minPrice: priceRange.value[0] }),
@@ -75,7 +75,7 @@ watch(productsError, (err) => {
 
 const products = computed(() => (result.value as any)?.items ?? [])
 const total = computed(() => (result.value as any)?.total ?? 0)
-const totalPages = computed(() => Math.ceil(total.value / 10))
+const totalPages = computed(() => Math.ceil(total.value / 9))
 const pending = computed(() => status.value === 'pending')
 
 useSeoMeta({
