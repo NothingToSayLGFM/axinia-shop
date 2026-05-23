@@ -85,7 +85,12 @@ useSchemaOrg([
 
 useSeoMeta({
   title: computed(() => `${categoryName.value} — купити`),
-  description: computed(() => `Купити ${categoryName.value.toLowerCase()} за вигідними цінами в ПП Аксінья-Маркет. Великий вибір, безкоштовна доставка по Україні.`),
+  description: computed(() => {
+    const name = categoryName.value.toLowerCase()
+    const count = total.value
+    const countStr = count > 0 ? ` ✅ ${count} ${count === 1 ? 'товар' : count < 5 ? 'товари' : 'товарів'} в наявності.` : ''
+    return `Купити ${name} в ПП Аксінья-Маркет.${countStr} Ціна за запитом. Безкоштовна доставка по Україні.`
+  }),
   ogType: 'website',
   ogImage: computed(() => (category.value as any)?.image ?? '/images/logo.webp'),
   twitterCard: 'summary_large_image',

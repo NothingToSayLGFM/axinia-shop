@@ -3,8 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 useSeoMeta({
-  title: 'Каталог засобів захисту',
-  description: 'Каталог засобів захисту: протигази, респіратори, газоаналізатори, захисні костюми, фільтри, засоби тактичної медицини. Фільтрація за ціною та категорією.',
+  title: 'Каталог засобів захисту — інтернет-магазин',
   ogType: 'website',
   ogImage: '/images/logo.webp',
   twitterCard: 'summary_large_image',
@@ -68,6 +67,14 @@ const products = computed(() => (result.value as any)?.items ?? [])
 const total = computed(() => (result.value as any)?.total ?? 0)
 const totalPages = computed(() => Math.ceil(total.value / 10))
 const pending = computed(() => status.value === 'pending')
+
+useSeoMeta({
+  description: computed(() => {
+    const count = total.value
+    const countStr = count > 0 ? ` ✅ ${count} ${count === 1 ? 'товар' : count < 5 ? 'товари' : 'товарів'} в наявності.` : ''
+    return `Каталог засобів індивідуального захисту — протигази, респіратори, захисні костюми, газоаналізатори.${countStr} Ціна за запитом. Безкоштовна доставка по Україні.`
+  }),
+})
 
 watch([search, selectedCategories, priceRange, page], () => {
   router.replace({
