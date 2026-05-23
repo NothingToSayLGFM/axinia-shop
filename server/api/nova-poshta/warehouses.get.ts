@@ -5,7 +5,10 @@ const WAREHOUSE_TYPE_REFS: Record<string, string> = {
   parcel_locker: 'f9316480-5f2d-425d-bc2c-ac7cd29decf0',
 }
 
+import { rateLimit } from '../../utils/rateLimit'
+
 export default defineEventHandler(async (event) => {
+  rateLimit(event, { max: 20, windowMs: 60 * 1000 })
   const { cityRef, type } = getQuery(event)
 
   if (!cityRef) return []

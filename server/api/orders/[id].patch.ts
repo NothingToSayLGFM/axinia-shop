@@ -1,10 +1,12 @@
 import { z } from 'zod'
+import { requireAuth } from '../../utils/auth'
 
 const schema = z.object({
   status: z.enum(['new', 'processing', 'shipped', 'delivered', 'cancelled']),
 })
 
 export default defineEventHandler(async (event) => {
+  requireAuth(event)
   const id = parseInt(getRouterParam(event, 'id') ?? '')
   if (isNaN(id)) throw createError({ statusCode: 400, message: 'Invalid id' })
 

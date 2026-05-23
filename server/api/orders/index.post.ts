@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { rateLimit } from '../../utils/rateLimit'
 
 const itemSchema = z.object({
   productId: z.number().int().optional(),
@@ -26,6 +27,7 @@ const schema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
+  rateLimit(event, { max: 10, windowMs: 10 * 60 * 1000 })
   const body = await readValidatedBody(event, schema.parse)
   const { items, email, ...orderData } = body
 

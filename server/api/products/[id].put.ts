@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { requireAuth } from '../../utils/auth'
 
 const imageSchema = z.object({
   url: z.string().min(1),
@@ -21,6 +22,7 @@ const schema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
+  requireAuth(event)
   const id = Number(getRouterParam(event, "id"));
   const body = await readValidatedBody(event, schema.parse);
   const { categoryIds, images, ...data } = body;

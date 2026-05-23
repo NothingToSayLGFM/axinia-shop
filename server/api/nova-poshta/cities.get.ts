@@ -1,4 +1,7 @@
+import { rateLimit } from '../../utils/rateLimit'
+
 export default defineEventHandler(async (event) => {
+  rateLimit(event, { max: 40, windowMs: 60 * 1000 })
   const { search } = getQuery(event)
 
   if (!search || String(search).length < 3) return []

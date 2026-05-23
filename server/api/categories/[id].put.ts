@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { requireAuth } from '../../utils/auth'
 
 const schema = z.object({
   name: z.string().min(1).optional(),
@@ -8,6 +9,7 @@ const schema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
+  requireAuth(event)
   const id = getRouterParam(event, "id");
   const body = await readValidatedBody(event, schema.parse);
   const category = await prisma.category.update({

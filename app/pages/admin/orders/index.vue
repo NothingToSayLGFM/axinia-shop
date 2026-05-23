@@ -82,6 +82,26 @@ function formatPrice(value: number | string) {
   return `${Number(value).toLocaleString('uk-UA')} грн`
 }
 
+function formatItemPrice(item: OrderItem) {
+  if (Number(item.price) === 0) return 'Договірна'
+  return `${item.quantity} × ${formatPrice(item.price)}`
+}
+
+function formatItemTotal(item: OrderItem) {
+  if (Number(item.price) === 0) return 'Договірна'
+  return formatPrice(Number(item.price) * item.quantity)
+}
+
+function formatOrderTotal(order: Order) {
+  const hasNegotiable = order.items.some(i => Number(i.price) === 0)
+  const pricedTotal = order.items
+    .filter(i => Number(i.price) > 0)
+    .reduce((sum, i) => sum + Number(i.price) * i.quantity, 0)
+  if (hasNegotiable && pricedTotal === 0) return 'Договірна'
+  if (hasNegotiable) return `≈ ${formatPrice(pricedTotal)} (+ договірна)`
+  return formatPrice(order.totalPrice)
+}
+
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleString('uk-UA', {
     day: '2-digit', month: '2-digit', year: 'numeric',
@@ -141,7 +161,7 @@ async function updateStatus(status: OrderStatus) {
             <TableCell class="font-medium">{{ order.name }}</TableCell>
             <TableCell class="text-sm">{{ order.phone }}</TableCell>
             <TableCell class="hidden lg:table-cell text-sm text-muted-foreground">{{ order.email ?? '—' }}</TableCell>
-            <TableCell class="text-right font-semibold whitespace-nowrap">{{ formatPrice(order.totalPrice) }}</TableCell>
+            <TableCell class="text-right font-semibold whitespace-nowrap">{{ formatOrderTotal(order) }}</TableCell>
             <TableCell>
               <Badge :class="STATUS_CLASSES[order.status]">{{ STATUS_LABELS[order.status] }}</Badge>
             </TableCell>
@@ -228,21 +248,21 @@ async function updateStatus(status: OrderStatus) {
             <ul class="space-y-3">
               <li v-for="item in selectedOrder.items" :key="item.id" class="flex items-center gap-3">
                 <div class="h-12 w-12 shrink-0 rounded-md bg-muted overflow-hidden">
-                  <NuxtImg v-if="item.image" :src="item.image" :alt="item.name" class="h-full w-full object-contain" />
+                  <img v-if="item.image" :src="item.image" :alt="item.name" class="h-full w-full object-contain" />
                   <div v-else class="flex h-full w-full items-center justify-center">
                     <Icon name="lucide:package" class="h-4 w-4 text-muted-foreground/30" />
                   </div>
                 </div>
                 <div class="flex-1 min-w-0">
                   <p class="text-sm font-medium line-clamp-1">{{ item.name }}</p>
-                  <p class="text-xs text-muted-foreground">{{ item.quantity }} × {{ formatPrice(item.price) }}</p>
+                  <p class="text-xs text-muted-foreground">{{ formatItemPrice(item) }}</p>
                 </div>
-                <span class="text-sm font-semibold whitespace-nowrap">{{ formatPrice(Number(item.price) * item.quantity) }}</span>
+                <span class="text-sm font-semibold whitespace-nowrap">{{ formatItemTotal(item) }}</span>
               </li>
             </ul>
             <div class="flex items-center justify-between pt-2 border-t">
               <span class="text-sm text-muted-foreground">Разом:</span>
-              <span class="text-base font-bold">{{ formatPrice(selectedOrder.totalPrice) }}</span>
+              <span class="text-base font-bold">{{ formatOrderTotal(selectedOrder) }}</span>
             </div>
           </div>
 
