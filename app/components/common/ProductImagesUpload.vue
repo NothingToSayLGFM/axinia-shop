@@ -50,6 +50,8 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 export interface ProductImage {
   url: string
   isMain: boolean
@@ -68,8 +70,9 @@ function setMain(idx: number) {
 
 function remove(idx: number) {
   const next = props.modelValue.filter((_, i) => i !== idx)
-  if (next.length && props.modelValue[idx].isMain) {
-    next[0] = { ...next[0], isMain: true }
+  const removedWasMain = props.modelValue[idx]?.isMain ?? false
+  if (next.length > 0 && removedWasMain) {
+    next[0] = { ...next[0]!, isMain: true }
   }
   emit('update:modelValue', next)
 }
@@ -88,6 +91,8 @@ async function onFileChange(e: Event) {
       ...props.modelValue,
       { url: result.url, isMain: isFirst, sortOrder: props.modelValue.length },
     ])
+  } catch {
+    toast.error('Помилка завантаження', { description: 'Не вдалося завантажити зображення. Перевірте формат і розмір файлу (макс. 10MB).' })
   } finally {
     uploading.value = false
     if (input.value) input.value.value = ''

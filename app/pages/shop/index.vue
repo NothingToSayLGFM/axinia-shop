@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { toast } from 'vue-sonner'
 
 useSeoMeta({
   title: 'Каталог засобів захисту — інтернет-магазин',
@@ -59,8 +60,17 @@ const productsQuery = computed(() => ({
   ...(priceRange.value[1] < PRICE_MAX && { maxPrice: priceRange.value[1] }),
 }))
 
-const { data: result, status } = await useFetch('/api/products', {
+const { data: result, status, error: productsError } = await useFetch('/api/products', {
   query: productsQuery,
+})
+
+watch(productsError, (err) => {
+  if (!err) return
+  if (err.status === 429) {
+    toast.error('Забагато запитів', { description: 'Зачекайте хвилину і спробуйте знову.' })
+  } else {
+    toast.error('Помилка завантаження', { description: 'Не вдалося завантажити товари.' })
+  }
 })
 
 const products = computed(() => (result.value as any)?.items ?? [])

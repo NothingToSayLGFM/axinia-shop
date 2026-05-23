@@ -306,6 +306,7 @@
 
 <script setup lang="ts">
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { toast } from 'vue-sonner'
 
 interface Category { id: number; name: string; slug: string }
 interface ProductImage { id: number; url: string; isMain: boolean; sortOrder: number }
@@ -379,6 +380,9 @@ async function create() {
     await $fetch('/api/products', { method: 'POST', body: form })
     Object.assign(form, { name: '', slug: '', description: '', longDescription: null, price: undefined, article: '', images: [], categoryIds: [], isActive: true, inStock: true, isHit: false })
     await refresh()
+    toast.success('Товар додано')
+  } catch {
+    toast.error('Помилка', { description: 'Не вдалося додати товар' })
   } finally {
     saving.value = false
   }
@@ -386,8 +390,13 @@ async function create() {
 
 async function remove(id: number) {
   if (!confirm('Видалити товар?')) return
-  await $fetch(`/api/products/${id}`, { method: 'DELETE' })
-  await refresh()
+  try {
+    await $fetch(`/api/products/${id}`, { method: 'DELETE' })
+    await refresh()
+    toast.success('Товар видалено')
+  } catch {
+    toast.error('Помилка', { description: 'Не вдалося видалити товар' })
+  }
 }
 
 const editOpen = ref(false)
@@ -432,6 +441,9 @@ async function saveEdit() {
     await $fetch(`/api/products/${editId.value}`, { method: 'PUT', body: editForm })
     editOpen.value = false
     await refresh()
+    toast.success('Товар збережено')
+  } catch {
+    toast.error('Помилка', { description: 'Не вдалося зберегти товар' })
   } finally {
     editSaving.value = false
   }

@@ -121,8 +121,13 @@ async function submitOrder() {
     })
     cart.clear()
     orderNumber.value = order.id
-  } catch {
-    toast.error('Помилка оформлення', { description: 'Спробуйте ще раз або зв\'яжіться з нами.' })
+  } catch (err) {
+    const status = (err as { status?: number })?.status
+    if (status === 429) {
+      toast.error('Забагато спроб', { description: 'Зачекайте кілька хвилин і спробуйте ще раз.' })
+    } else {
+      toast.error('Помилка оформлення', { description: 'Спробуйте ще раз або зв\'яжіться з нами.' })
+    }
   } finally {
     isSubmitting.value = false
   }
@@ -191,6 +196,12 @@ async function loadWarehouses() {
     warehouses.value = await $fetch<WarehouseResult[]>('/api/nova-poshta/warehouses', {
       query: { cityRef: form.cityRef, type: form.deliveryType },
     })
+  } catch (err) {
+    const status = (err as { status?: number })?.status
+    if (status === 429) {
+      toast.error('Забагато запитів', { description: 'Зачекайте хвилину і спробуйте обрати місто знову.' })
+    }
+    warehouses.value = []
   } finally {
     warehousesLoading.value = false
   }
@@ -235,6 +246,13 @@ const searchCities = useDebounceFn(async (query: string) => {
       query: { search: query },
     })
     cityOpen.value = cityResults.value.length > 0
+  } catch (err) {
+    const status = (err as { status?: number })?.status
+    if (status === 429) {
+      toast.error('Забагато запитів', { description: 'Зачекайте хвилину і спробуйте ввести місто знову.' })
+    }
+    cityResults.value = []
+    cityOpen.value = false
   } finally {
     cityLoading.value = false
   }

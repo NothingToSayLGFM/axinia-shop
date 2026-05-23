@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { toast } from 'vue-sonner'
 
 const route = useRoute()
 const router = useRouter()
@@ -36,8 +37,17 @@ const productsQuery = computed(() => ({
   ...(sort.value && { sort: sort.value }),
 }))
 
-const { data: result, status } = await useFetch('/api/products', {
+const { data: result, status, error: productsError } = await useFetch('/api/products', {
   query: productsQuery,
+})
+
+watch(productsError, (err) => {
+  if (!err) return
+  if (err.status === 429) {
+    toast.error('Забагато запитів', { description: 'Зачекайте хвилину і спробуйте знову.' })
+  } else {
+    toast.error('Помилка завантаження', { description: 'Не вдалося завантажити товари.' })
+  }
 })
 
 const products = computed(() => (result.value as any)?.items ?? [])

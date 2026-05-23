@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Separator } from '@/components/ui/separator'
+import { toast } from 'vue-sonner'
 
 type OrderStatus = 'new' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
 
@@ -119,6 +120,9 @@ async function updateStatus(status: OrderStatus) {
     })
     selectedOrder.value = updated
     await refresh()
+    toast.success('Статус оновлено')
+  } catch {
+    toast.error('Помилка', { description: 'Не вдалося оновити статус замовлення' })
   } finally {
     isUpdating.value = false
   }

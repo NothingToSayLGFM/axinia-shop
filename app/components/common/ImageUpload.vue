@@ -27,6 +27,8 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 const props = defineProps<{ modelValue?: string | null }>()
 const emit = defineEmits<{ 'update:modelValue': [value: string | null] }>()
 
@@ -45,6 +47,8 @@ async function onFileChange(e: Event) {
     formData.append('file', file)
     const result = await $fetch<{ url: string }>('/api/upload', { method: 'POST', body: formData })
     emit('update:modelValue', result.url)
+  } catch {
+    toast.error('Помилка завантаження', { description: 'Не вдалося завантажити зображення. Перевірте формат і розмір файлу (макс. 10MB).' })
   } finally {
     uploading.value = false
     if (input.value) input.value.value = ''

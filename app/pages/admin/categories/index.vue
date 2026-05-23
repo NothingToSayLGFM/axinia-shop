@@ -114,6 +114,8 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from 'vue-sonner'
+
 interface Category {
   id: number
   name: string
@@ -145,6 +147,9 @@ async function create() {
     form.sortOrder = 0
     form.image = null
     await refresh()
+    toast.success('Категорію додано')
+  } catch {
+    toast.error('Помилка', { description: 'Не вдалося додати категорію' })
   } finally {
     saving.value = false
   }
@@ -152,8 +157,13 @@ async function create() {
 
 async function remove(id: number) {
   if (!confirm('Видалити категорію?')) return
-  await $fetch(`/api/categories/${id}`, { method: 'DELETE' })
-  await refresh()
+  try {
+    await $fetch(`/api/categories/${id}`, { method: 'DELETE' })
+    await refresh()
+    toast.success('Категорію видалено')
+  } catch {
+    toast.error('Помилка', { description: 'Не вдалося видалити категорію' })
+  }
 }
 
 const editOpen = ref(false)
@@ -179,6 +189,9 @@ async function saveEdit() {
     await $fetch(`/api/categories/${editId.value}`, { method: 'PUT', body: editForm })
     editOpen.value = false
     await refresh()
+    toast.success('Категорію збережено')
+  } catch {
+    toast.error('Помилка', { description: 'Не вдалося зберегти категорію' })
   } finally {
     editSaving.value = false
   }

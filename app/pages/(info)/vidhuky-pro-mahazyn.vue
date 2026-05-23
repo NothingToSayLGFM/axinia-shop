@@ -74,8 +74,13 @@ async function submitReview() {
     form.email = ''
     form.text = ''
     form.rating = 0
-  } catch {
-    toast.error('Помилка', { description: 'Не вдалося надіслати відгук. Спробуйте ще раз.' })
+  } catch (err) {
+    const status = (err as { status?: number })?.status
+    if (status === 429) {
+      toast.error('Забагато відгуків', { description: 'Ви вже залишили відгук нещодавно. Спробуйте через годину.' })
+    } else {
+      toast.error('Помилка', { description: 'Не вдалося надіслати відгук. Спробуйте ще раз.' })
+    }
   } finally {
     isSubmitting.value = false
   }
