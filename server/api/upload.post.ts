@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
 
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.webp`
   const webpData = await sharp(file.data)
-    .resize({ width: 800, withoutEnlargement: true })
+    .resize({ width: 600, withoutEnlargement: true })
     .webp({ quality: 82 })
     .toBuffer()
 
