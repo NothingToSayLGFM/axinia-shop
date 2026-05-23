@@ -330,8 +330,8 @@ function clearCity() {
 
           <div class="flex flex-col gap-4">
             <!-- ПІБ -->
-            <div class="grid grid-cols-[140px_1fr] items-start gap-4">
-              <Label for="name" class="text-sm text-muted-foreground pt-2">ПІБ</Label>
+            <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[140px_1fr] sm:items-start sm:gap-4">
+              <Label for="name" class="text-sm text-muted-foreground sm:pt-2">ПІБ</Label>
               <div class="flex flex-col gap-1">
                 <Input id="name" v-model="form.name" placeholder="Прізвище Ім'я По батькові" :class="errors.name && 'border-destructive focus-visible:border-destructive'" />
                 <p v-if="errors.name" class="text-xs text-destructive">{{ errors.name }}</p>
@@ -339,8 +339,8 @@ function clearCity() {
             </div>
 
             <!-- Телефон -->
-            <div class="grid grid-cols-[140px_1fr] items-start gap-4">
-              <Label for="phone" class="text-sm text-muted-foreground pt-2">Телефон</Label>
+            <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[140px_1fr] sm:items-start sm:gap-4">
+              <Label for="phone" class="text-sm text-muted-foreground sm:pt-2">Телефон</Label>
               <div class="flex flex-col gap-1">
                 <Input id="phone" v-maska="'+38 (0##) ###-##-##'" v-model="form.phone" type="tel" placeholder="+38 (0__) ___-__-__" :class="errors.phone && 'border-destructive focus-visible:border-destructive'" />
                 <p v-if="errors.phone" class="text-xs text-destructive">{{ errors.phone }}</p>
@@ -348,7 +348,7 @@ function clearCity() {
             </div>
 
             <!-- Місто -->
-            <div class="grid grid-cols-[140px_1fr] items-center gap-4">
+            <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[140px_1fr] sm:items-center sm:gap-4">
               <Label class="text-sm text-muted-foreground">Місто</Label>
               <div ref="cityContainer" class="relative">
                 <!-- Input with search icon -->
@@ -404,14 +404,14 @@ function clearCity() {
             </div>
 
             <!-- E-пошта -->
-            <div class="grid grid-cols-[140px_1fr] items-center gap-4">
+            <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[140px_1fr] sm:items-center sm:gap-4">
               <Label for="email" class="text-sm text-muted-foreground">E-пошта</Label>
               <Input id="email" v-model="form.email" type="email" placeholder="example@email.com" />
             </div>
 
             <!-- Коментар -->
-            <div class="grid grid-cols-[140px_1fr] items-start gap-4">
-              <Label for="comment" class="text-sm text-muted-foreground pt-2">Коментар</Label>
+            <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[140px_1fr] sm:items-start sm:gap-4">
+              <Label for="comment" class="text-sm text-muted-foreground sm:pt-2">Коментар</Label>
               <Textarea
                 id="comment"
                 v-model="form.comment"
@@ -428,7 +428,7 @@ function clearCity() {
 
           <div class="flex flex-col gap-4">
             <!-- Тип доставки -->
-            <div class="grid grid-cols-[140px_1fr] items-center gap-4">
+            <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[140px_1fr] sm:items-center sm:gap-4">
               <Label class="text-sm text-muted-foreground">Доставка</Label>
               <Select v-model="form.deliveryType">
                 <SelectTrigger aria-label="Тип доставки">
@@ -445,9 +445,9 @@ function clearCity() {
             <!-- Відділення або Поштомат -->
             <div
               v-if="form.deliveryType !== 'courier'"
-              class="grid grid-cols-[140px_1fr] items-start gap-4"
+              class="flex flex-col gap-2 sm:grid sm:grid-cols-[140px_1fr] sm:items-start sm:gap-4"
             >
-              <Label class="text-sm text-muted-foreground pt-2">Відділення</Label>
+              <Label class="text-sm text-muted-foreground sm:pt-2">Відділення</Label>
               <div class="flex flex-col gap-1">
                 <Select v-model="form.warehouseRef" :disabled="!form.cityRef || warehousesLoading">
                   <SelectTrigger aria-label="Відділення" :class="errors.warehouse && 'border-destructive'">
@@ -466,11 +466,11 @@ function clearCity() {
             <!-- Адреса кур'єра -->
             <div
               v-if="form.deliveryType === 'courier'"
-              class="grid grid-cols-[140px_1fr] items-start gap-4"
+              class="flex flex-col gap-2 sm:grid sm:grid-cols-[140px_1fr] sm:items-start sm:gap-4"
             >
-              <Label class="text-sm text-muted-foreground pt-2">Адреса</Label>
+              <Label class="text-sm text-muted-foreground sm:pt-2">Адреса</Label>
               <div class="flex flex-col gap-2">
-                <div class="grid grid-cols-[1fr_100px_100px] gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-[1fr_100px_100px] gap-2">
                   <Input v-model="form.street" placeholder="Вулиця" :class="errors.street && 'border-destructive focus-visible:border-destructive'" />
                   <Input v-model="form.building" placeholder="Будинок" :class="errors.building && 'border-destructive focus-visible:border-destructive'" />
                   <Input v-model="form.apartment" placeholder="Квартира" />
@@ -486,8 +486,8 @@ function clearCity() {
         <div class="rounded-lg border bg-card p-6">
           <h2 class="text-base font-semibold mb-5">Оплата</h2>
 
-          <div class="grid grid-cols-[140px_1fr] items-start gap-4">
-            <Label class="text-sm text-muted-foreground pt-2">Спосіб оплати</Label>
+          <div class="flex flex-col gap-2 sm:grid sm:grid-cols-[140px_1fr] sm:items-start sm:gap-4">
+            <Label class="text-sm text-muted-foreground sm:pt-2">Спосіб оплати</Label>
             <div class="flex flex-col gap-2">
               <Select v-model="form.paymentType">
                 <SelectTrigger aria-label="Спосіб оплати">
