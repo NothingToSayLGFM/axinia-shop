@@ -11,6 +11,8 @@ import { onClickOutside, useDebounceFn } from '@vueuse/core'
 import { vMaska } from 'maska/vue'
 import { toast } from 'vue-sonner'
 
+useSeoMeta({ title: 'Оформлення замовлення', robots: 'noindex' })
+
 const cart = useCartStore()
 
 const termsOpen = ref(false)
