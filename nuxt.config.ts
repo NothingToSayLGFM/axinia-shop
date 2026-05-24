@@ -109,6 +109,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     novaPostApiKey: '',
+    resendApiKey: '',
+    shopEmail: '',
   },
 
   nitro: {

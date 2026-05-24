@@ -47,6 +47,7 @@
     "prisma": "^7.8.0",
     "radix-vue": "^1.9.17",
     "reka-ui": "^2.9.7",
+    "resend": "^6.12.3",
     "satori": "^0.26.0",
     "sharp": "^0.34.0",
     "tailwind-merge": "^3.5.0",

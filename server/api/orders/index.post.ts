@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { rateLimit } from '../../utils/rateLimit'
+import { sendOrderEmails } from '../../utils/email'
 
 const itemSchema = z.object({
   productId: z.number().int().optional(),
@@ -50,6 +51,8 @@ export default defineEventHandler(async (event) => {
     },
     include: { items: true },
   })
+
+  sendOrderEmails(order).catch(console.error)
 
   return order
 })
