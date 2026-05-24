@@ -39,17 +39,18 @@
             <CommonProductImagesUpload v-model="form.images" />
           </div>
           <div class="flex flex-col gap-1">
-            <Label>Категорії</Label>
+            <Label>Категорія <span class="text-muted-foreground font-normal">(одна)</span></Label>
             <div class="flex flex-wrap gap-2">
-              <label
+              <button
                 v-for="cat in categories"
                 :key="cat.id"
-                class="flex items-center gap-2 cursor-pointer border rounded-md px-3 py-1.5 text-sm transition-colors"
+                type="button"
+                class="border rounded-md px-3 py-1.5 text-sm transition-colors"
                 :class="form.categoryIds.includes(cat.id) ? 'bg-primary text-primary-foreground border-primary' : 'hover:bg-muted'"
+                @click="form.categoryIds = form.categoryIds.includes(cat.id) ? [] : [cat.id]"
               >
-                <input type="checkbox" :value="cat.id" v-model="form.categoryIds" class="hidden" />
                 {{ cat.name }}
-              </label>
+              </button>
             </div>
           </div>
           <div class="flex items-center gap-4">
@@ -235,17 +236,18 @@
           <CommonProductImagesUpload v-model="editForm.images" />
         </div>
         <div class="flex flex-col gap-1">
-          <Label>Категорії</Label>
+          <Label>Категорія <span class="text-muted-foreground font-normal">(одна)</span></Label>
           <div class="flex flex-wrap gap-2">
-            <label
+            <button
               v-for="cat in categories"
               :key="cat.id"
-              class="flex items-center gap-2 cursor-pointer border rounded-md px-3 py-1.5 text-sm transition-colors"
+              type="button"
+              class="border rounded-md px-3 py-1.5 text-sm transition-colors"
               :class="editForm.categoryIds.includes(cat.id) ? 'bg-primary text-primary-foreground border-primary' : 'hover:bg-muted'"
+              @click="editForm.categoryIds = editForm.categoryIds.includes(cat.id) ? [] : [cat.id]"
             >
-              <input type="checkbox" :value="cat.id" v-model="editForm.categoryIds" class="hidden" />
               {{ cat.name }}
-            </label>
+            </button>
           </div>
         </div>
         <div class="flex items-center gap-4">

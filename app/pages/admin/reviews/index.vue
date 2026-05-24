@@ -29,6 +29,7 @@ function formatDate(dateStr: string) {
 }
 
 const toggling = ref<number | null>(null)
+const deleting = ref<number | null>(null)
 
 async function togglePublish(review: Review) {
   toggling.value = review.id
@@ -43,6 +44,20 @@ async function togglePublish(review: Review) {
     toast.error('Помилка', { description: 'Не вдалося змінити статус' })
   } finally {
     toggling.value = null
+  }
+}
+
+async function deleteReview(id: number) {
+  if (!confirm('Видалити відгук назавжди?')) return
+  deleting.value = id
+  try {
+    await $fetch(`/api/reviews/${id}`, { method: 'DELETE' })
+    toast.success('Відгук видалено')
+    await refresh()
+  } catch {
+    toast.error('Помилка', { description: 'Не вдалося видалити відгук' })
+  } finally {
+    deleting.value = null
   }
 }
 
@@ -124,15 +139,28 @@ const pending = computed(() => reviews.value?.filter(r => !r.isPublished).length
               </Badge>
             </td>
             <td class="px-4 py-3 text-right">
-              <Button
-                :variant="review.isPublished ? 'outline' : 'default'"
-                size="sm"
-                :disabled="toggling === review.id"
-                @click="togglePublish(review)"
-              >
-                <Icon v-if="toggling === review.id" name="lucide:loader-circle" class="h-3.5 w-3.5 mr-1.5 animate-spin" />
-                {{ review.isPublished ? 'Відкликати' : 'Опублікувати' }}
-              </Button>
+              <div class="flex items-center justify-end gap-2">
+                <Button
+                  :variant="review.isPublished ? 'outline' : 'default'"
+                  size="sm"
+                  :disabled="toggling === review.id || deleting === review.id"
+                  @click="togglePublish(review)"
+                >
+                  <Icon v-if="toggling === review.id" name="lucide:loader-circle" class="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                  {{ review.isPublished ? 'Відкликати' : 'Опублікувати' }}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  class="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                  :disabled="deleting === review.id || toggling === review.id"
+                  :aria-label="`Видалити відгук від ${review.name}`"
+                  @click="deleteReview(review.id)"
+                >
+                  <Icon v-if="deleting === review.id" name="lucide:loader-circle" class="h-3.5 w-3.5 animate-spin" />
+                  <Icon v-else name="lucide:trash-2" class="h-3.5 w-3.5" />
+                </Button>
+              </div>
             </td>
           </tr>
         </tbody>

@@ -162,7 +162,7 @@ const visiblePages = computed(() => {
 
     <div class="flex gap-8 items-start">
       <!-- Сайдбар (только desktop) -->
-      <aside class="hidden lg:block w-56 shrink-0 sticky top-24">
+      <aside class="hidden lg:block w-56 shrink-0 sticky top-24" aria-label="Фільтри товарів">
         <ProductsFilters
           :categories="categories ?? []"
           :selected-categories="selectedCategories"

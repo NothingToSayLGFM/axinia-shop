@@ -512,109 +512,118 @@ function clearCity() {
           <h2 class="font-semibold">Ваше замовлення</h2>
         </div>
 
-        <!-- Empty state -->
-        <div
-          v-if="cart.items.length === 0"
-          class="flex flex-col items-center justify-center gap-2 px-5 py-10 text-center text-muted-foreground"
-        >
-          <Icon name="lucide:shopping-cart" class="h-10 w-10 opacity-20" />
-          <p class="text-sm font-medium">Кошик порожній</p>
-        </div>
-
-        <!-- Items list -->
-        <ul v-else class="divide-y max-h-[420px] overflow-y-auto">
-          <li
-            v-for="item in cart.items"
-            :key="item.id"
-            class="flex items-center gap-3 px-5 py-3"
+        <ClientOnly>
+          <!-- Empty state -->
+          <div
+            v-if="cart.items.length === 0"
+            class="flex flex-col items-center justify-center gap-2 px-5 py-10 text-center text-muted-foreground"
           >
-            <!-- Thumbnail -->
-            <div class="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-muted">
-              <img
-                v-if="item.image?.startsWith('/uploads/')"
-                :src="item.image"
-                :alt="item.name"
-                class="h-full w-full object-contain"
-              />
-              <NuxtImg
-                v-else-if="item.image"
-                :src="item.image"
-                :alt="item.name"
-                class="h-full w-full object-contain"
-              />
-              <div v-else class="flex h-full w-full items-center justify-center">
-                <Icon name="lucide:package" class="h-5 w-5 text-muted-foreground/30" />
-              </div>
-            </div>
-
-            <!-- Info -->
-            <div class="flex flex-1 flex-col gap-1.5 min-w-0">
-              <NuxtLink
-                :to="item.categorySlug ? `/shop/${item.categorySlug}/${item.slug ?? item.id}` : `/shop/${item.slug ?? item.id}`"
-                class="text-sm font-medium leading-tight line-clamp-2 hover:underline cursor-pointer"
-              >{{ item.name }}</NuxtLink>
-              <div class="flex items-center gap-1">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  class="h-6 w-6 shrink-0"
-                  :aria-label="`Зменшити кількість ${item.name}`"
-                  @click="cart.updateQuantity(item.id, item.quantity - 1)"
-                >
-                  <Icon name="lucide:minus" class="h-3 w-3" />
-                </Button>
-                <span class="w-6 text-center text-sm font-medium" :aria-label="`Кількість: ${item.quantity}`">{{ item.quantity }}</span>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  class="h-6 w-6 shrink-0"
-                  :aria-label="`Збільшити кількість ${item.name}`"
-                  @click="cart.updateQuantity(item.id, item.quantity + 1)"
-                >
-                  <Icon name="lucide:plus" class="h-3 w-3" />
-                </Button>
-              </div>
-              <p class="text-sm font-semibold">{{ formatItemPrice(item) }}</p>
-            </div>
-
-            <!-- Remove -->
-            <Button
-              variant="ghost"
-              size="icon"
-              class="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
-              :aria-label="`Видалити ${item.name}`"
-              @click="cart.removeItem(item.id)"
-            >
-              <Icon name="lucide:x" class="h-3.5 w-3.5" />
-            </Button>
-          </li>
-        </ul>
-
-        <!-- Footer -->
-        <template v-if="cart.items.length > 0">
-          <Separator />
-          <div class="px-5 py-4 space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-sm text-muted-foreground">Разом:</span>
-              <span class="text-lg font-bold">{{ totalLabel }}</span>
-            </div>
-            <Button
-              class="w-full"
-              size="default"
-              :disabled="!form.cityRef || cart.items.length === 0 || isSubmitting"
-              @click="submitOrder"
-            >
-              <Icon v-if="isSubmitting" name="lucide:loader-circle" class="mr-2 h-4 w-4 animate-spin" />
-              {{ isSubmitting ? 'Оформлення...' : 'Оформити замовлення' }}
-            </Button>
-            <p class="text-center text-xs text-muted-foreground">
-              Натискаючи кнопку, ви погоджуєтесь з
-              <button type="button" class="underline underline-offset-2 hover:text-foreground transition-colors cursor-pointer" @click="termsOpen = true">
-                угодою користувача
-              </button>
-            </p>
+            <Icon name="lucide:shopping-cart" class="h-10 w-10 opacity-20" />
+            <p class="text-sm font-medium">Кошик порожній</p>
           </div>
-        </template>
+
+          <!-- Items list -->
+          <ul v-else class="divide-y max-h-[420px] overflow-y-auto">
+            <li
+              v-for="item in cart.items"
+              :key="item.id"
+              class="flex items-center gap-3 px-5 py-3"
+            >
+              <!-- Thumbnail -->
+              <div class="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-muted">
+                <img
+                  v-if="item.image?.startsWith('/uploads/')"
+                  :src="item.image"
+                  :alt="item.name"
+                  class="h-full w-full object-contain"
+                />
+                <NuxtImg
+                  v-else-if="item.image"
+                  :src="item.image"
+                  :alt="item.name"
+                  class="h-full w-full object-contain"
+                />
+                <div v-else class="flex h-full w-full items-center justify-center">
+                  <Icon name="lucide:package" class="h-5 w-5 text-muted-foreground/30" />
+                </div>
+              </div>
+
+              <!-- Info -->
+              <div class="flex flex-1 flex-col gap-1.5 min-w-0">
+                <NuxtLink
+                  :to="item.categorySlug ? `/shop/${item.categorySlug}/${item.slug ?? item.id}` : `/shop/${item.slug ?? item.id}`"
+                  class="text-sm font-medium leading-tight line-clamp-2 hover:underline cursor-pointer"
+                >{{ item.name }}</NuxtLink>
+                <div class="flex items-center gap-1">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    class="h-6 w-6 shrink-0"
+                    :aria-label="`Зменшити кількість ${item.name}`"
+                    @click="cart.updateQuantity(item.id, item.quantity - 1)"
+                  >
+                    <Icon name="lucide:minus" class="h-3 w-3" />
+                  </Button>
+                  <span class="w-6 text-center text-sm font-medium" :aria-label="`Кількість: ${item.quantity}`">{{ item.quantity }}</span>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    class="h-6 w-6 shrink-0"
+                    :aria-label="`Збільшити кількість ${item.name}`"
+                    @click="cart.updateQuantity(item.id, item.quantity + 1)"
+                  >
+                    <Icon name="lucide:plus" class="h-3 w-3" />
+                  </Button>
+                </div>
+                <p class="text-sm font-semibold">{{ formatItemPrice(item) }}</p>
+              </div>
+
+              <!-- Remove -->
+              <Button
+                variant="ghost"
+                size="icon"
+                class="h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive"
+                :aria-label="`Видалити ${item.name}`"
+                @click="cart.removeItem(item.id)"
+              >
+                <Icon name="lucide:x" class="h-3.5 w-3.5" />
+              </Button>
+            </li>
+          </ul>
+
+          <!-- Footer -->
+          <template v-if="cart.items.length > 0">
+            <Separator />
+            <div class="px-5 py-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-sm text-muted-foreground">Разом:</span>
+                <span class="text-lg font-bold">{{ totalLabel }}</span>
+              </div>
+              <Button
+                class="w-full"
+                size="default"
+                :disabled="!form.cityRef || cart.items.length === 0 || isSubmitting"
+                @click="submitOrder"
+              >
+                <Icon v-if="isSubmitting" name="lucide:loader-circle" class="mr-2 h-4 w-4 animate-spin" />
+                {{ isSubmitting ? 'Оформлення...' : 'Оформити замовлення' }}
+              </Button>
+              <p class="text-center text-xs text-muted-foreground">
+                Натискаючи кнопку, ви погоджуєтесь з
+                <button type="button" class="underline underline-offset-2 hover:text-foreground transition-colors cursor-pointer" @click="termsOpen = true">
+                  угодою користувача
+                </button>
+              </p>
+            </div>
+          </template>
+
+          <template #fallback>
+            <div class="flex flex-col items-center justify-center gap-2 px-5 py-10 text-center text-muted-foreground">
+              <Icon name="lucide:shopping-cart" class="h-10 w-10 opacity-20" />
+              <p class="text-sm font-medium">Кошик порожній</p>
+            </div>
+          </template>
+        </ClientOnly>
       </div>
     </div>
     </template>
