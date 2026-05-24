@@ -3,12 +3,12 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 COPY prisma.config.ts ./
-RUN npm ci
+RUN npm install
 
 FROM node:22-alpine AS prod-deps
 WORKDIR /app
 COPY package*.json ./
-RUN npm pkg delete scripts.postinstall && npm ci --omit=dev
+RUN npm pkg delete scripts.postinstall && npm install --omit=dev
 
 FROM node:22-alpine AS builder
 WORKDIR /app
