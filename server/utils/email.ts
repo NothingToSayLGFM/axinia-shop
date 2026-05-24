@@ -15,7 +15,7 @@ const PAYMENT_LABELS: Record<string, string> = {
 interface EmailOrderItem {
   name: string
   quantity: number
-  price: number | { toNumber(): number }
+  price: unknown
 }
 
 interface EmailOrder {
@@ -31,26 +31,49 @@ interface EmailOrder {
   building?: string | null
   apartment?: string | null
   paymentType: string
-  totalPrice: number | { toNumber(): number }
+  totalPrice: unknown
   items: EmailOrderItem[]
 }
 
-function toNum(val: number | { toNumber(): number }): number {
-  return typeof val === 'number' ? val : val.toNumber()
+function toNum(val: unknown): number {
+  if (typeof val === 'number') return val
+  if (typeof val === 'string') return parseFloat(val) || 0
+  // Prisma Decimal (decimal.js) — toString() is always correct
+  if (val !== null && typeof val === 'object') return parseFloat(String(val)) || 0
+  return 0
+}
+
+function fmtPrice(val: unknown): string {
+  const n = toNum(val)
+  return n === 0 ? 'Договірна' : `${n.toLocaleString('uk-UA')}&nbsp;грн`
+}
+
+function fmtRowTotal(price: unknown, quantity: number): string {
+  const n = toNum(price)
+  return n === 0 ? 'Договірна' : `${(n * quantity).toLocaleString('uk-UA')}&nbsp;грн`
+}
+
+function fmtTotal(items: EmailOrderItem[], total: unknown): string {
+  const hasNegotiable = items.some((i) => toNum(i.price) === 0)
+  const hasPriced = items.some((i) => toNum(i.price) > 0)
+  const totalNum = toNum(total)
+
+  if (hasNegotiable && !hasPriced) return 'Договірна'
+  if (hasNegotiable && hasPriced) return `≈ ${totalNum.toLocaleString('uk-UA')}&nbsp;грн (+ договірна)`
+  return `${totalNum.toLocaleString('uk-UA')}&nbsp;грн`
 }
 
 function shortId(id: string | number): string {
   return String(id)
 }
 
-function itemsTable(items: EmailOrderItem[], total: number | { toNumber(): number }): string {
+function itemsTable(items: EmailOrderItem[], total: unknown): string {
   const rows = items.map((item) => {
-    const price = toNum(item.price)
     return `<tr>
       <td style="padding:8px 12px;border-bottom:1px solid #e4e4e7;">${item.name}</td>
       <td style="padding:8px 12px;border-bottom:1px solid #e4e4e7;text-align:center;">${item.quantity}</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #e4e4e7;text-align:right;">${price}&nbsp;грн</td>
-      <td style="padding:8px 12px;border-bottom:1px solid #e4e4e7;text-align:right;">${price * item.quantity}&nbsp;грн</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e4e4e7;text-align:right;">${fmtPrice(item.price)}</td>
+      <td style="padding:8px 12px;border-bottom:1px solid #e4e4e7;text-align:right;">${fmtRowTotal(item.price, item.quantity)}</td>
     </tr>`
   }).join('')
 
@@ -67,7 +90,7 @@ function itemsTable(items: EmailOrderItem[], total: number | { toNumber(): numbe
     <tfoot>
       <tr>
         <td colspan="3" style="padding:10px 12px;font-weight:600;text-align:right;">Разом:</td>
-        <td style="padding:10px 12px;font-weight:700;text-align:right;font-size:16px;">${toNum(total)}&nbsp;грн</td>
+        <td style="padding:10px 12px;font-weight:700;text-align:right;font-size:16px;">${fmtTotal(items, total)}</td>
       </tr>
     </tfoot>
   </table>`
@@ -84,7 +107,7 @@ function customerHtml(order: EmailOrder): string {
       ${itemsTable(order.items, order.totalPrice)}
       <div style="background:#f4f4f5;border-radius:6px;padding:16px;margin-top:20px;">
         <p style="margin:0;font-size:15px;">
-          З вами зв'яжуться для уточнення деталей замовлення протягом кількох хвилин
+          З вами зв'яжуться для уточнення деталей замовлення найближчим часов
           за номером телефону: <strong>${order.phone}</strong>
         </p>
       </div>
