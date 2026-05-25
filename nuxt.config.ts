@@ -121,14 +121,14 @@ export default defineNuxtConfig({
     // Rendering strategies
     '/': { isr: 60 },
     '/shop/**': { isr: 300 },
-    '/about': { isr: 3600 },
-    '/delivery': { isr: 3600 },
-    '/payment': { isr: 3600 },
-    '/warranty': { isr: 3600 },
-    '/contact': { isr: 3600 },
-    '/discount': { isr: 3600 },
-    '/terms': { isr: 3600 },
-    '/sitemap': { isr: 3600 },
+    '/about': { isr: 300 },
+    '/delivery': { isr: 300 },
+    '/payment': { isr: 300 },
+    '/warranty': { isr: 300 },
+    '/contact': { isr: 300 },
+    '/discount': { isr: 300 },
+    '/terms': { isr: 300 },
+    '/sitemap': { isr: 300 },
     '/vidhuky-pro-mahazyn': { isr: 300 },
 
     // Auth & admin
