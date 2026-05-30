@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/carousel'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { useIntersectionObserver } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 
 const route = useRoute()
@@ -31,6 +32,17 @@ const productId = computed(() => (product.value as any)?.id ?? null)
 const categoryName = computed(() => (category.value as any)?.name ?? null)
 
 const cart = useCartStore()
+
+const buyButtonsRef = ref<HTMLElement | null>(null)
+const showStickyBar = ref(false)
+
+useIntersectionObserver(
+  buyButtonsRef,
+  ([entry]) => {
+    showStickyBar.value = !entry.isIntersecting && entry.boundingClientRect.top < 0
+  },
+  { threshold: 0 },
+)
 
 function formatPrice(price: string | number | null | undefined) {
   if (!price) return null
@@ -92,6 +104,43 @@ useSchemaOrg([
 </script>
 
 <template>
+  <!-- Sticky buy bar (appears when buy buttons scroll out of view) -->
+  <Transition name="sticky-bar">
+    <div
+      v-if="showStickyBar && product"
+      class="fixed top-20 left-0 right-0 z-40 bg-background/95 backdrop-blur border-b shadow-md supports-[backdrop-filter]:bg-background/80"
+    >
+      <CommonContainer>
+        <div class="flex h-14 items-center justify-between gap-4">
+          <p class="font-semibold text-sm sm:text-base truncate min-w-0">
+            {{ (product as any)?.name }}
+          </p>
+          <div class="flex items-center gap-2 shrink-0">
+            <Button
+              size="sm"
+              class="gap-1.5 cursor-pointer bg-foreground text-background hover:bg-foreground/90"
+              @click="addToCart"
+            >
+              <Icon name="lucide:shopping-cart" class="h-4 w-4" />
+              Купити
+            </Button>
+            <Button
+              v-if="!(product as any)?.price"
+              size="sm"
+              class="gap-1.5 bg-foreground text-background hover:bg-foreground/90"
+              as-child
+            >
+              <a href="tel:+380675303930">
+                <Icon name="lucide:phone" class="h-4 w-4" />
+                Запит
+              </a>
+            </Button>
+          </div>
+        </div>
+      </CommonContainer>
+    </div>
+  </Transition>
+
   <CommonContainer class="py-8">
     <!-- Breadcrumbs -->
     <nav class="mb-6 flex items-center gap-2 text-sm text-muted-foreground" aria-label="Хлібні крихти">
@@ -170,7 +219,7 @@ useSchemaOrg([
           {{ (product as any).description }}
         </p>
 
-        <div class="flex items-center gap-4">
+        <div ref="buyButtonsRef" class="flex items-center gap-4 mt-auto">
           <p v-if="(product as any).price" class="text-2xl font-bold">
             {{ formatPrice((product as any).price) }}
           </p>
@@ -204,3 +253,14 @@ useSchemaOrg([
     />
   </CommonContainer>
 </template>
+
+<style scoped>
+.sticky-bar-enter-active,
+.sticky-bar-leave-active {
+  transition: transform 0.25s ease;
+}
+.sticky-bar-enter-from,
+.sticky-bar-leave-to {
+  transform: translateY(-100%);
+}
+</style>
