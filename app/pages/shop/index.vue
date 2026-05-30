@@ -98,6 +98,10 @@ watch([search, selectedCategories, priceRange, page], () => {
   })
 }, { deep: true })
 
+watch(page, () => {
+  if (import.meta.client) window.scrollTo({ top: 0, behavior: 'smooth' })
+})
+
 function resetFilters() {
   searchInput.value = ''
   search.value = ''

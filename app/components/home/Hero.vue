@@ -33,7 +33,7 @@ const advantages = [
         </h1>
         <a
           :href="phoneHref"
-          class="inline-flex w-fit items-center gap-3 rounded-lg bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-md transition-opacity hover:opacity-90 cursor-pointer"
+          class="inline-flex w-fit items-center gap-3 rounded-lg bg-foreground px-8 py-4 text-lg font-semibold text-background shadow-md transition-opacity hover:opacity-90 cursor-pointer"
         >
           <Icon name="lucide:phone" class="h-5 w-5 shrink-0" />
           Замовити
@@ -41,7 +41,7 @@ const advantages = [
       </div>
 
       <div class="hidden sm:flex shrink-0 items-center justify-center lg:flex-1">
-        <div class="relative flex h-72 w-72 items-center justify-center rounded-full bg-muted sm:h-96 sm:w-96">
+        <div class="relative flex h-72 w-72 items-center justify-center rounded-full bg-brand/10 sm:h-96 sm:w-96">
           <NuxtImg
             src="/images/hero.webp"
             alt="Протигаз"
@@ -64,7 +64,7 @@ const advantages = [
         :to="item.to"
         class="group flex flex-col items-center gap-3 rounded-xl border bg-card px-6 py-7 text-center shadow-sm cursor-pointer transition-shadow hover:shadow-md"
       >
-        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary transition-transform duration-200 group-hover:scale-110">
+        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand/10 text-foreground transition-transform duration-200 group-hover:scale-110">
           <Icon :name="item.icon" class="h-6 w-6" />
         </div>
         <span class="text-base font-bold text-foreground">{{ item.label }}</span>

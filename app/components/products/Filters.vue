@@ -77,7 +77,7 @@ function applyPrice() {
         <span>{{ localPriceRange[0].toLocaleString('uk-UA') }}</span>
         <span>{{ localPriceRange[1].toLocaleString('uk-UA') }}</span>
       </div>
-      <Button size="sm" class="w-full" @click="applyPrice">ОК</Button>
+      <Button size="sm" class="w-full bg-foreground text-background hover:bg-foreground/90" @click="applyPrice">ОК</Button>
     </div>
   </div>
 </template>

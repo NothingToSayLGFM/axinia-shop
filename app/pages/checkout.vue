@@ -558,7 +558,7 @@ function clearCity() {
                   <Button
                     variant="outline"
                     size="icon"
-                    class="h-6 w-6 shrink-0"
+                    class="h-6 w-6 shrink-0 text-destructive hover:text-destructive"
                     :aria-label="`Зменшити кількість ${item.name}`"
                     @click="cart.updateQuantity(item.id, item.quantity - 1)"
                   >
@@ -568,7 +568,7 @@ function clearCity() {
                   <Button
                     variant="outline"
                     size="icon"
-                    class="h-6 w-6 shrink-0"
+                    class="h-6 w-6 shrink-0 text-brand hover:text-brand"
                     :aria-label="`Збільшити кількість ${item.name}`"
                     @click="cart.updateQuantity(item.id, item.quantity + 1)"
                   >
@@ -600,7 +600,7 @@ function clearCity() {
                 <span class="text-lg font-bold">{{ totalLabel }}</span>
               </div>
               <Button
-                class="w-full"
+                class="w-full bg-foreground text-background hover:bg-foreground/90"
                 size="default"
                 :disabled="!form.cityRef || cart.items.length === 0 || isSubmitting"
                 @click="submitOrder"

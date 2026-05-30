@@ -71,14 +71,14 @@ const infoLinks = [
               :href="phoneHref"
               class="flex items-center gap-3 rounded-md border bg-background px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer"
             >
-              <Icon name="lucide:phone" class="h-4 w-4 shrink-0 text-primary" />
+              <Icon name="lucide:phone" class="h-4 w-4 shrink-0 text-brand" />
               {{ phone }}
             </a>
             <a
               :href="emailHref"
               class="flex items-center gap-3 rounded-md border bg-background px-4 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground cursor-pointer"
             >
-              <Icon name="lucide:mail" class="h-4 w-4 shrink-0 text-primary" />
+              <Icon name="lucide:mail" class="h-4 w-4 shrink-0 text-brand" />
               {{ email }}
             </a>
           </div>

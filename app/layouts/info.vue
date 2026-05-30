@@ -17,7 +17,8 @@ const infoLinks = [
   { label: 'Мапа сайту', to: '/sitemap' },
 ]
 
-function onSelectChange(to: string) {
+function onSelectChange(to: string | null) {
+  if (!to) return
   router.push(to)
 }
 </script>
@@ -53,7 +54,7 @@ function onSelectChange(to: string) {
                 :class="[
                   'px-4 py-3 text-sm leading-tight transition-colors',
                   route.path === link.to
-                    ? 'bg-primary text-primary-foreground'
+                    ? 'bg-foreground text-background'
                     : 'hover:bg-muted',
                 ]"
               >

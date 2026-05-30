@@ -88,7 +88,7 @@ function addToCart() {
         <span class="text-sm text-muted-foreground">Ціна на запит</span>
         <a
           href="tel:+380675303930"
-          class="inline-flex items-center justify-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 h-9"
+          class="inline-flex items-center justify-center gap-1.5 rounded-md bg-foreground px-3 py-1.5 text-sm font-medium text-background transition-opacity hover:opacity-90 h-9"
         >
           <Icon name="lucide:phone" class="h-3 w-3" />
           Запит
@@ -97,7 +97,7 @@ function addToCart() {
     </CardContent>
 
     <CardFooter class="grid grid-cols-2 gap-2">
-      <Button class="gap-1.5" size="sm" @click="addToCart">
+      <Button class="gap-1.5 bg-foreground text-background hover:bg-foreground/90" size="sm" @click="addToCart">
         <Icon name="lucide:shopping-cart" class="h-4 w-4" />
         Купити
       </Button>
@@ -106,7 +106,7 @@ function addToCart() {
           <Button
             variant="ghost"
             size="icon"
-            class="h-7 w-7 shrink-0"
+            class="h-7 w-7 shrink-0 text-destructive hover:text-destructive"
             aria-label="Зменшити кількість"
             @click="cart.updateQuantity(id, cartItem.quantity - 1)"
           >
@@ -116,7 +116,7 @@ function addToCart() {
           <Button
             variant="ghost"
             size="icon"
-            class="h-7 w-7 shrink-0"
+            class="h-7 w-7 shrink-0 text-brand hover:text-brand"
             aria-label="Збільшити кількість"
             @click="cart.updateQuantity(id, cartItem.quantity + 1)"
           >

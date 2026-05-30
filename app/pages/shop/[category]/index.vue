@@ -65,6 +65,10 @@ watch([search, sort, page], () => {
   })
 }, { deep: true })
 
+watch(page, () => {
+  if (import.meta.client) window.scrollTo({ top: 0, behavior: 'smooth' })
+})
+
 function resetSearch() {
   searchInput.value = ''
   search.value = ''

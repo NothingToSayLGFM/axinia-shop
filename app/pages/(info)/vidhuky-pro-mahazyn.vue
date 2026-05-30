@@ -134,13 +134,13 @@ watch(() => form.rating, () => { if (errors.rating) errors.rating = '' })
           :key="opt.value"
           :variant="sort === opt.value ? 'default' : 'ghost'"
           size="sm"
-          class="text-xs"
+          :class="['text-xs', sort === opt.value ? 'bg-foreground text-background hover:bg-foreground/90' : '']"
           @click="sort = opt.value"
         >
           {{ opt.label }}
         </Button>
       </div>
-      <Button size="sm" @click="scrollToForm">Написати відгук</Button>
+      <Button size="sm" class="bg-foreground text-background hover:bg-foreground/90" @click="scrollToForm">Написати відгук</Button>
     </div>
 
     <!-- Reviews list -->
@@ -240,7 +240,7 @@ watch(() => form.rating, () => { if (errors.rating) errors.rating = '' })
           <p v-if="errors.rating" class="text-xs text-destructive">{{ errors.rating }}</p>
         </div>
 
-        <Button type="submit" :disabled="isSubmitting" class="w-full sm:w-auto">
+        <Button type="submit" :disabled="isSubmitting" class="w-full sm:w-auto bg-foreground text-background hover:bg-foreground/90">
           <Icon v-if="isSubmitting" name="lucide:loader-circle" class="h-4 w-4 mr-2 animate-spin" />
           Надіслати
         </Button>

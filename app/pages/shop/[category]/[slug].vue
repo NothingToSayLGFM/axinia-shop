@@ -175,11 +175,11 @@ useSchemaOrg([
             {{ formatPrice((product as any).price) }}
           </p>
           <p v-else class="text-muted-foreground">Ціна на запит</p>
-          <Button size="lg" class="cursor-pointer gap-2" @click="addToCart">
+          <Button size="lg" class="cursor-pointer gap-2 bg-foreground text-background hover:bg-foreground/90" @click="addToCart">
             <Icon name="lucide:shopping-cart" class="h-5 w-5" />
             Купити
           </Button>
-          <Button v-if="!(product as any).price" size="lg" class="gap-2" as-child>
+          <Button v-if="!(product as any).price" size="lg" class="gap-2 bg-foreground text-background hover:bg-foreground/90" as-child>
             <a href="tel:+380675303930">
               <Icon name="lucide:phone" class="h-5 w-5" />
               Запит

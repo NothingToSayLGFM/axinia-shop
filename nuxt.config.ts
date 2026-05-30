@@ -1,5 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 
+const isProd = process.env.NODE_ENV === 'production'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
@@ -93,6 +95,9 @@ export default defineNuxtConfig({
       checkboxActiveCircleBackground: '#ffffff',
       checkboxInactiveCircleBackground: '#ffffff',
       checkboxDisabledCircleBackground: '#a1a1aa',
+      controlButtonBackground: '#84D114',
+      controlButtonIconColor: '#ffffff',
+      controlButtonHoverBackground: '#6faf0f',
     },
   },
 
@@ -118,18 +123,18 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    // Rendering strategies
-    '/': { isr: 60 },
-    '/shop/**': { isr: 300 },
-    '/about': { isr: 300 },
-    '/delivery': { isr: 300 },
-    '/payment': { isr: 300 },
-    '/warranty': { isr: 300 },
-    '/contact': { isr: 300 },
-    '/discount': { isr: 300 },
-    '/terms': { isr: 300 },
-    '/sitemap': { isr: 300 },
-    '/vidhuky-pro-mahazyn': { isr: 300 },
+    // Rendering strategies (ISR only in production)
+    '/': isProd ? { isr: 60 } : {},
+    '/shop/**': isProd ? { isr: 300 } : {},
+    '/about': isProd ? { isr: 300 } : {},
+    '/delivery': isProd ? { isr: 300 } : {},
+    '/payment': isProd ? { isr: 300 } : {},
+    '/warranty': isProd ? { isr: 300 } : {},
+    '/contact': isProd ? { isr: 300 } : {},
+    '/discount': isProd ? { isr: 300 } : {},
+    '/terms': isProd ? { isr: 300 } : {},
+    '/sitemap': isProd ? { isr: 300 } : {},
+    '/vidhuky-pro-mahazyn': isProd ? { isr: 300 } : {},
 
     // Auth & admin
     '/admin/**': { appMiddleware: ['admin'] },

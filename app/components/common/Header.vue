@@ -50,9 +50,9 @@ function handleSearchClick() {
         <!-- Телефон (md+) -->
         <a
           :href="phoneHref"
-          class="hidden items-center gap-2 font-medium text-foreground transition-colors hover:text-primary md:flex"
+          class="hidden items-center gap-2 font-medium text-foreground transition-colors hover:text-foreground/80 md:flex"
         >
-          <Icon name="lucide:phone" class="h-5 w-5 shrink-0" />
+          <Icon name="lucide:phone" class="h-5 w-5 shrink-0 text-brand" />
           {{ phone }}
         </a>
 

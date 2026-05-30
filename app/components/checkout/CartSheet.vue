@@ -52,7 +52,7 @@ const totalLabel = computed(() => {
         <Icon name="lucide:shopping-cart" class="h-6 w-6" />
         <span
           v-if="cart.totalItems > 0"
-          class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground"
+          class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white"
         >
           {{ cart.totalItems > 99 ? '99+' : cart.totalItems }}
         </span>
@@ -121,7 +121,7 @@ const totalLabel = computed(() => {
               <Button
                 variant="outline"
                 size="icon"
-                class="h-6 w-6 shrink-0"
+                class="h-6 w-6 shrink-0 text-destructive hover:text-destructive"
                 @click="cart.updateQuantity(item.id, item.quantity - 1)"
               >
                 <Icon name="lucide:minus" class="h-3 w-3" />
@@ -130,7 +130,7 @@ const totalLabel = computed(() => {
               <Button
                 variant="outline"
                 size="icon"
-                class="h-6 w-6 shrink-0"
+                class="h-6 w-6 shrink-0 text-brand hover:text-brand"
                 @click="cart.updateQuantity(item.id, item.quantity + 1)"
               >
                 <Icon name="lucide:plus" class="h-3 w-3" />
@@ -161,7 +161,7 @@ const totalLabel = computed(() => {
             <span class="text-sm text-muted-foreground">Разом:</span>
             <span class="text-lg font-bold">{{ totalLabel }}</span>
           </div>
-          <Button class="w-full" size="default" @click="goToCheckout">Оформити замовлення</Button>
+          <Button class="w-full bg-foreground text-background hover:bg-foreground/90" size="default" @click="goToCheckout">Оформити замовлення</Button>
         </div>
       </template>
     </PopoverContent>
