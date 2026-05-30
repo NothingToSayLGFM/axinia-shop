@@ -13,7 +13,7 @@ const { carouselRef, orientation } = useCarousel()
 </script>
 
 <template>
-  <div ref="carouselRef" class="overflow-hidden">
+  <div ref="carouselRef" class="overflow-hidden px-[3px] py-[3px]">
     <div
       :class="
         cn(
