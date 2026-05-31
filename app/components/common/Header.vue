@@ -74,7 +74,7 @@ function handleSearchClick() {
         <!-- Правый блок: поиск + корзина + гамбургер -->
         <div class="flex items-center gap-1">
           <Button variant="ghost" size="icon" class="h-10 w-10 cursor-pointer" aria-label="Пошук" @click="handleSearchClick">
-            <Icon name="lucide:search" class="h-6 w-6" />
+            <Icon name="lucide:search" size="18" />
           </Button>
 
           <!-- Единственная инстанция корзины -->
@@ -82,7 +82,7 @@ function handleSearchClick() {
             <CheckoutCartSheet />
             <template #fallback>
               <Button variant="ghost" size="icon" class="h-10 w-10" aria-label="Кошик">
-                <Icon name="lucide:shopping-cart" class="h-6 w-6" />
+                <Icon name="lucide:shopping-cart" size="18" />
               </Button>
             </template>
           </ClientOnly>
@@ -95,7 +95,7 @@ function handleSearchClick() {
             aria-label="Меню"
             @click="mobileMenuOpen = !mobileMenuOpen"
           >
-            <Icon :name="mobileMenuOpen ? 'lucide:x' : 'lucide:menu'" class="h-6 w-6" />
+            <Icon :name="mobileMenuOpen ? 'lucide:x' : 'lucide:menu'" size="18" />
           </Button>
         </div>
 

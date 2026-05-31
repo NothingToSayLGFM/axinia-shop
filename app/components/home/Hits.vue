@@ -53,7 +53,7 @@ const products = computed(() => rawProducts.value as unknown as Product[])
     </div>
 
     <div v-if="products?.length" class="mt-10 flex justify-center">
-      <Button variant="outline" size="lg" class="cursor-pointer" as-child>
+      <Button variant="outline" size="lg" class="w-full cursor-pointer sm:w-auto" as-child>
         <NuxtLink to="/shop">Переглянути всі</NuxtLink>
       </Button>
     </div>

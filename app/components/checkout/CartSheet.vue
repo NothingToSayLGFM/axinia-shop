@@ -49,7 +49,7 @@ const totalLabel = computed(() => {
         class="relative h-10 w-10 cursor-pointer"
         aria-label="Кошик"
       >
-        <Icon name="lucide:shopping-cart" class="h-6 w-6" />
+        <Icon name="lucide:shopping-cart" size="18" />
         <span
           v-if="cart.totalItems > 0"
           class="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] font-bold text-white"

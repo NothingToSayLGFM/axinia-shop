@@ -33,7 +33,7 @@ const advantages = [
         </h1>
         <a
           :href="phoneHref"
-          class="inline-flex w-fit items-center gap-3 rounded-lg bg-foreground px-8 py-4 text-lg font-semibold text-background shadow-md transition-opacity hover:opacity-90 cursor-pointer"
+          class="inline-flex w-full justify-center sm:w-fit items-center gap-3 rounded-lg bg-foreground px-8 py-4 text-lg font-semibold text-background shadow-md transition-opacity hover:opacity-90 cursor-pointer"
         >
           <Icon name="lucide:phone" class="h-5 w-5 shrink-0" />
           Замовити

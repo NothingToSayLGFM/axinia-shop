@@ -96,8 +96,8 @@ function addToCart() {
       </div>
     </CardContent>
 
-    <CardFooter class="grid grid-cols-2 gap-2">
-      <Button class="gap-1.5 bg-foreground text-background hover:bg-foreground/90" size="sm" @click="addToCart">
+    <CardFooter class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      <Button class="w-full gap-1.5 bg-foreground text-background hover:bg-foreground/90" size="sm" @click="addToCart">
         <Icon name="lucide:shopping-cart" class="h-4 w-4" />
         Купити
       </Button>

@@ -125,7 +125,7 @@ export default defineNuxtConfig({
   routeRules: {
     // Rendering strategies (ISR only in production)
     '/': isProd ? { isr: 60 } : {},
-    '/shop/**': isProd ? { isr: 300 } : {},
+    '/shop/**': {},
     '/about': isProd ? { isr: 300 } : {},
     '/delivery': isProd ? { isr: 300 } : {},
     '/payment': isProd ? { isr: 300 } : {},
