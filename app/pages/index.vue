@@ -13,7 +13,7 @@ useSchemaOrg([
     url: 'https://axinia.com.ua',
     logo: 'https://axinia.com.ua/images/logo.webp',
     telephone: '+380675303930',
-    email: 'info@axinia.com.ua',
+    email: 'axinia-market@ukr.net',
   }),
   defineWebSite({
     name: 'Аксінья-Маркет',

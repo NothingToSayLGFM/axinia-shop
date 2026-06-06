@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const phone = '+38 (067) 530-39-30'
 const phoneHref = 'tel:+380675303930'
-const email = 'info@axinia.com.ua'
-const emailHref = 'mailto:info@axinia.com.ua'
+const email = 'axinia-market@ukr.net'
+const emailHref = 'mailto:axinia-market@ukr.net'
 
 const { data: categories } = await useFetch('/api/categories')
 

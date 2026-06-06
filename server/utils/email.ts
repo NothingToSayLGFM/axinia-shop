@@ -99,7 +99,7 @@ function itemsTable(items: EmailOrderItem[], total: unknown): string {
 function customerHtml(order: EmailOrder): string {
   return `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;color:#09090b;">
     <div style="background:#09090b;padding:20px 24px;border-radius:8px 8px 0 0;">
-      <h1 style="margin:0;color:#ffffff;font-size:20px;">ПП Аксінья-Маркет</h1>
+      <h1 style="margin:0;color:#ffffff;font-size:20px;">Аксінья-Маркет</h1>
     </div>
     <div style="padding:24px;border:1px solid #e4e4e7;border-top:none;border-radius:0 0 8px 8px;">
       <h2 style="margin:0 0 8px;font-size:18px;">Дякуємо за замовлення, ${order.name}!</h2>
@@ -161,12 +161,12 @@ export async function sendOrderEmails(order: EmailOrder): Promise<void> {
   if (!config.resendApiKey) return
 
   const resend = new Resend(config.resendApiKey)
-  const shopEmail = config.shopEmail || 'info@axinia.com.ua'
+  const shopEmail = config.shopEmail || 'axinia-market@ukr.net'
   const id = shortId(order.id)
 
   const sends: Promise<unknown>[] = [
     resend.emails.send({
-      from: 'ПП Аксінья-Маркет <noreply@axinia.com.ua>',
+      from: 'Аксінья-Маркет <noreply@axinia.com.ua>',
       to: shopEmail,
       subject: `Нове замовлення #${id} — ${order.name}`,
       html: shopHtml(order),
@@ -176,7 +176,7 @@ export async function sendOrderEmails(order: EmailOrder): Promise<void> {
   if (order.email) {
     sends.push(
       resend.emails.send({
-        from: 'ПП Аксінья-Маркет <noreply@axinia.com.ua>',
+        from: 'Аксінья-Маркет <noreply@axinia.com.ua>',
         to: order.email,
         subject: `Дякуємо за замовлення #${id}`,
         html: customerHtml(order),
