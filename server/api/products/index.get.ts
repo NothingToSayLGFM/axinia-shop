@@ -11,10 +11,12 @@ export default defineEventHandler(async (event) => {
   const sort = query.sort as string | undefined
   const limit = query.limit ? Number(query.limit) : 10
 
-  const orderBy =
+  const secondaryOrder =
     sort === 'price_asc' ? { price: 'asc' as const } :
     sort === 'price_desc' ? { price: 'desc' as const } :
     { createdAt: 'desc' as const }
+
+  const orderBy = [{ inStock: 'desc' as const }, secondaryOrder]
 
   let resolvedCategoryIds: number[] = categoryId ? [categoryId] : []
   if (categorySlugs.length > 0 && resolvedCategoryIds.length === 0) {
