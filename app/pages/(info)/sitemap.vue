@@ -3,7 +3,7 @@ definePageMeta({ layout: 'info' })
 const { data: page } = await useFetch('/api/pages/sitemap')
 useSeoMeta({
   title: 'Мапа сайту',
-  description: 'Структура сайту ПП Аксінья-Маркет. Всі розділи та сторінки магазину засобів індивідуального захисту.',
+  description: 'Структура сайту Аксінья-Маркет. Всі розділи та сторінки магазину засобів індивідуального захисту.',
 })
 </script>
 

@@ -3,7 +3,7 @@ definePageMeta({ layout: 'info' })
 const { data: page } = await useFetch('/api/pages/warranty')
 useSeoMeta({
   title: 'Гарантія та повернення',
-  description: 'Умови гарантії, обміну та повернення товарів ПП Аксінья-Маркет. Захист ваших прав як покупця.',
+  description: 'Умови гарантії, обміну та повернення товарів Аксінья-Маркет. Захист ваших прав як покупця.',
 })
 </script>
 

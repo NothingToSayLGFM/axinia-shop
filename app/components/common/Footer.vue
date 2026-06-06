@@ -26,7 +26,7 @@ const infoLinks = [
         <div class="flex flex-col gap-4">
           <NuxtLink to="/" class="flex items-center gap-3">
             <NuxtImg src="/images/logo.webp" alt="Аксінья-Маркет" format="webp" quality="85" width="80" class="h-10 w-auto" />
-            <span class="text-sm font-bold leading-tight">ПП Аксінья-Маркет</span>
+            <span class="text-sm font-bold leading-tight">Аксінья-Маркет</span>
           </NuxtLink>
           <p class="text-sm leading-relaxed text-muted-foreground">
             Приватне підприємство «Аксінья – Маркет» реалізовує засоби індивідуального захисту для комплексного обслуговування відділів ЦО та Охорони праці.

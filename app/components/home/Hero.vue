@@ -4,8 +4,8 @@ const phoneHref = 'tel:+380675303930'
 const advantages = [
   {
     icon: 'lucide:truck',
-    label: 'Безкоштовна доставка',
-    description: 'Безкоштовна доставка по всій Україні',
+    label: 'Доставка по Україні',
+    description: 'Доставка по всій Україні',
     to: '/payment',
   },
   {
@@ -40,10 +40,10 @@ const advantages = [
         </a>
       </div>
 
-      <div class="hidden sm:flex shrink-0 items-center justify-center lg:flex-1">
+      <div class="flex shrink-0 items-center justify-center lg:flex-1">
         <div class="relative flex h-72 w-72 items-center justify-center rounded-full bg-brand/10 sm:h-96 sm:w-96">
           <NuxtImg
-            src="/images/hero.webp"
+            src="/images/hero-new.webp"
             alt="Протигаз"
             format="webp"
             quality="55"

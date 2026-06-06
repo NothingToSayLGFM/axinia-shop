@@ -43,7 +43,7 @@ function handleSearchClick() {
             class="h-11 w-auto"
           />
           <span class="hidden text-base font-bold leading-tight sm:block">
-            ПП Аксінья-Маркет
+            Аксінья-Маркет
           </span>
         </NuxtLink>
 

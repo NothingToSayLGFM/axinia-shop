@@ -82,7 +82,7 @@ useSeoMeta({
   description: computed(() => {
     const count = total.value
     const countStr = count > 0 ? ` ✅ ${count} ${count === 1 ? 'товар' : count < 5 ? 'товари' : 'товарів'} в наявності.` : ''
-    return `Каталог засобів індивідуального захисту — протигази, респіратори, захисні костюми, газоаналізатори.${countStr} Ціна за запитом. Безкоштовна доставка по Україні.`
+    return `Каталог засобів індивідуального захисту — протигази, респіратори, захисні костюми, газоаналізатори.${countStr} Ціна за запитом. Доставка по Україні.`
   }),
 })
 
@@ -205,6 +205,7 @@ const visiblePages = computed(() => {
             :name="product.name"
             :description="product.description"
             :price="product.price"
+            :in-stock="product.inStock"
           />
         </div>
 

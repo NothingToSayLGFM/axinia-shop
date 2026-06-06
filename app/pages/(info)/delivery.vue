@@ -3,7 +3,7 @@ definePageMeta({ layout: 'info' })
 const { data: page } = await useFetch('/api/pages/delivery')
 useSeoMeta({
   title: 'Доставка',
-  description: 'Умови та терміни доставки товарів ПП Аксінья-Маркет. Безкоштовна доставка Новою Поштою по всій Україні.',
+  description: 'Умови та терміни доставки товарів Аксінья-Маркет. Доставка Новою Поштою по всій Україні.',
 })
 </script>
 

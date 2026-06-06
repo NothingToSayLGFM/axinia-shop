@@ -70,6 +70,7 @@ onUnmounted(() => stopAutoplay())
             :name="p.name"
             :description="p.description"
             :price="p.price"
+            :in-stock="p.inStock"
           />
         </CarouselItem>
       </CarouselContent>

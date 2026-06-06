@@ -3,7 +3,7 @@ definePageMeta({ layout: 'info' })
 const { data: page } = await useFetch('/api/pages/discount')
 useSeoMeta({
   title: 'Знижки та акції',
-  description: 'Актуальні знижки та спеціальні пропозиції на засоби індивідуального захисту від ПП Аксінья-Маркет.',
+  description: 'Актуальні знижки та спеціальні пропозиції на засоби індивідуального захисту від Аксінья-Маркет.',
 })
 </script>
 

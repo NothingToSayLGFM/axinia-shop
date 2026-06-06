@@ -8,7 +8,7 @@ import { toast } from 'vue-sonner'
 definePageMeta({ layout: 'info' })
 useSeoMeta({
   title: 'Відгуки про магазин',
-  description: 'Відгуки покупців про ПП Аксінья-Маркет. Реальні оцінки та враження від покупок засобів індивідуального захисту.',
+  description: 'Відгуки покупців про Аксінья-Маркет. Реальні оцінки та враження від покупок засобів індивідуального захисту.',
 })
 
 type SortOption = 'newest' | 'rating_desc' | 'oldest'

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
   title: 'Засоби індивідуального захисту — інтернет-магазин',
-  description: 'Протигази, респіратори, захисні костюми, газоаналізатори, фільтри, засоби тактичної медицини, захист голови та слуху. Безкоштовна доставка по Україні.',
+  description: 'Протигази, респіратори, захисні костюми, газоаналізатори, фільтри, засоби тактичної медицини, захист голови та слуху. Доставка по Україні.',
   ogType: 'website',
   ogImage: '/images/logo.webp',
   twitterCard: 'summary_large_image',
@@ -9,14 +9,14 @@ useSeoMeta({
 
 useSchemaOrg([
   defineOrganization({
-    name: 'ПП Аксінья-Маркет',
+    name: 'Аксінья-Маркет',
     url: 'https://axinia.com.ua',
     logo: 'https://axinia.com.ua/images/logo.webp',
     telephone: '+380675303930',
     email: 'info@axinia.com.ua',
   }),
   defineWebSite({
-    name: 'ПП Аксінья-Маркет',
+    name: 'Аксінья-Маркет',
     description: 'Магазин засобів індивідуального захисту',
   }),
 ])

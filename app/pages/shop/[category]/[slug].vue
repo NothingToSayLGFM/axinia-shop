@@ -65,15 +65,20 @@ function addToCart() {
 
 useSeoMeta({
   title: computed(() => {
-    const name = (product.value as any)?.name
-    return name ? `${name} — купити` : ''
+    const p = product.value as any
+    const name = p?.name
+    if (!name) return ''
+    const price = p?.price ? ` — купити за ${Number(p.price).toLocaleString('uk-UA')} грн` : ' — купити'
+    return `${name}${price}`
   }),
   description: computed(() => {
     const p = product.value as any
-    if (p?.description) return p.description
     const name = p?.name ?? ''
-    const price = p?.price ? `за ціною ${Number(p.price).toLocaleString('uk-UA')} грн` : ''
-    return `Купити ${name} ${price}. Безкоштовна доставка по Україні. ПП Аксінья-Маркет — засоби індивідуального захисту.`.replace(/\s+/g, ' ').trim()
+    const priceStr = p?.price ? `Ціна: ${Number(p.price).toLocaleString('uk-UA')} грн. ` : ''
+    const base = p?.description
+      ? `${p.description} ${priceStr}`.trim()
+      : `Купити ${name}. ${priceStr}`.trim()
+    return `${base} Доставка по Україні. Аксінья-Маркет.`.replace(/\s+/g, ' ').trim()
   }),
   ogType: 'website',
   ogImage: computed(() => mainImage.value ?? '/images/logo.webp'),
@@ -117,6 +122,7 @@ useSchemaOrg([
           </p>
           <div class="flex items-center gap-2 shrink-0">
             <Button
+              v-if="(product as any)?.inStock"
               size="sm"
               class="gap-1.5 cursor-pointer bg-foreground text-background hover:bg-foreground/90"
               @click="addToCart"
@@ -125,7 +131,7 @@ useSchemaOrg([
               Купити
             </Button>
             <Button
-              v-if="!(product as any)?.price"
+              v-if="!(product as any)?.inStock || !(product as any)?.price"
               size="sm"
               class="gap-1.5 bg-foreground text-background hover:bg-foreground/90"
               as-child
@@ -212,7 +218,6 @@ useSchemaOrg([
         <div class="flex items-center gap-2">
           <Badge v-if="(product as any).inStock" class="bg-green-700 text-white hover:bg-green-800">В наявності</Badge>
           <Badge v-else variant="secondary" class="text-muted-foreground">Немає в наявності</Badge>
-          <Badge class="bg-green-700 text-white hover:bg-green-800">Безкоштовна доставка</Badge>
         </div>
 
         <p v-if="(product as any).description" class="text-muted-foreground leading-relaxed">
@@ -224,11 +229,11 @@ useSchemaOrg([
             {{ formatPrice((product as any).price) }}
           </p>
           <p v-else class="text-muted-foreground">Ціна на запит</p>
-          <Button size="lg" class="cursor-pointer gap-2 bg-foreground text-background hover:bg-foreground/90" @click="addToCart">
+          <Button v-if="(product as any).inStock" size="lg" class="cursor-pointer gap-2 bg-foreground text-background hover:bg-foreground/90" @click="addToCart">
             <Icon name="lucide:shopping-cart" class="h-5 w-5" />
             Купити
           </Button>
-          <Button v-if="!(product as any).price" size="lg" class="gap-2 bg-foreground text-background hover:bg-foreground/90" as-child>
+          <Button v-if="!(product as any).inStock || !(product as any).price" size="lg" class="gap-2 bg-foreground text-background hover:bg-foreground/90" as-child>
             <a href="tel:+380675303930">
               <Icon name="lucide:phone" class="h-5 w-5" />
               Запит

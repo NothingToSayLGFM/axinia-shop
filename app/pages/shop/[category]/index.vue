@@ -53,6 +53,13 @@ watch(productsError, (err) => {
 const products = computed(() => (result.value as any)?.items ?? [])
 const total = computed(() => (result.value as any)?.total ?? 0)
 const totalPages = computed(() => Math.ceil(total.value / 10))
+
+const minPrice = computed(() => {
+  const prices = products.value
+    .map((p: any) => p.price ? Number(p.price) : null)
+    .filter((p: number | null): p is number => p !== null && p > 0)
+  return prices.length ? Math.min(...prices) : null
+})
 const pending = computed(() => status.value === 'pending')
 
 watch([search, sort, page], () => {
@@ -103,7 +110,8 @@ useSeoMeta({
     const name = categoryName.value.toLowerCase()
     const count = total.value
     const countStr = count > 0 ? ` ✅ ${count} ${count === 1 ? 'товар' : count < 5 ? 'товари' : 'товарів'} в наявності.` : ''
-    return `Купити ${name} в ПП Аксінья-Маркет.${countStr} Ціна за запитом. Безкоштовна доставка по Україні.`
+    const priceStr = minPrice.value ? ` Ціни від ${minPrice.value.toLocaleString('uk-UA')} грн.` : ''
+    return `Купити ${name} в Аксінья-Маркет.${countStr}${priceStr} Доставка по Україні.`
   }),
   ogType: 'website',
   ogImage: computed(() => (category.value as any)?.image ?? '/images/logo.webp'),
@@ -165,6 +173,7 @@ useSeoMeta({
         :name="product.name"
         :description="product.description"
         :price="product.price"
+        :in-stock="product.inStock"
       />
     </div>
 

@@ -43,6 +43,7 @@ const products = computed(() => rawProducts.value as unknown as Product[])
         :name="product.name"
         :description="product.description"
         :price="product.price"
+        :in-stock="product.inStock"
       />
     </div>
 

@@ -11,6 +11,7 @@ const props = defineProps<{
   name?: string | null
   description?: string | null
   price?: string | number | null
+  inStock?: boolean | null
 }>()
 
 const cart = useCartStore()
@@ -84,7 +85,8 @@ function addToCart() {
       <span v-if="price" class="text-lg font-bold text-foreground">
         {{ formatPrice(price) }}
       </span>
-      <div v-else class="grid grid-cols-2 gap-2 items-center">
+      <!-- Запит біля ціни: тільки якщо нема ціни І товар є в наявності -->
+      <div v-else-if="inStock !== false" class="grid grid-cols-2 gap-2 items-center">
         <span class="text-sm text-muted-foreground">Ціна на запит</span>
         <a
           href="tel:+380675303930"
@@ -94,15 +96,25 @@ function addToCart() {
           Запит
         </a>
       </div>
+      <!-- Нема ціни і нема в наявності: тільки текст, Запит буде в футері -->
+      <span v-else class="text-sm text-muted-foreground">Ціна на запит</span>
     </CardContent>
 
     <CardFooter class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-      <Button class="w-full gap-1.5 bg-foreground text-background hover:bg-foreground/90" size="sm" @click="addToCart">
+      <Button v-if="inStock !== false" class="w-full gap-1.5 bg-foreground text-background hover:bg-foreground/90" size="sm" @click="addToCart">
         <Icon name="lucide:shopping-cart" class="h-4 w-4" />
         Купити
       </Button>
+      <a
+        v-else
+        href="tel:+380675303930"
+        class="inline-flex w-full items-center justify-center gap-1.5 rounded-md bg-foreground px-3 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 h-9"
+      >
+        <Icon name="lucide:phone" size="14" />
+        Запит
+      </a>
       <ClientOnly>
-        <div v-if="cartItem" class="flex items-center justify-between border rounded-md px-1 h-9">
+        <div v-if="cartItem && inStock !== false" class="flex items-center justify-between border rounded-md px-1 h-9">
           <Button
             variant="ghost"
             size="icon"

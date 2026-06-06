@@ -9,7 +9,7 @@ export default defineNuxtConfig({
 
   site: {
     url: 'https://axinia.com.ua',
-    name: 'ПП Аксінья-Маркет',
+    name: 'Аксінья-Маркет',
     description: 'Магазин засобів індивідуального захисту — протигази, респіратори, захисні костюми, газоаналізатори, засоби тактичної медицини. Безкоштовна доставка по Україні.',
     defaultLocale: 'uk',
     indexable: true,
