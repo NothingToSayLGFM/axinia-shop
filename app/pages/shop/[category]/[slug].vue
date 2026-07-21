@@ -94,7 +94,7 @@ useSchemaOrg([
     offers: defineOffer({
       price: () => (product.value as any)?.price ? Number((product.value as any).price) : 0,
       priceCurrency: 'UAH',
-      availability: () => (product.value as any)?.inStock ? 'InStock' : undefined,
+      availability: () => (product.value as any)?.inStock ? 'InStock' : 'OutOfStock',
     }),
   }),
   defineBreadcrumb({
