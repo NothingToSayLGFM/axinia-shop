@@ -115,7 +115,7 @@
           <Button type="button" variant="outline" :disabled="importing" @click="importInput?.click()">
             <Icon v-if="!importing" name="lucide:upload" class="h-4 w-4 mr-2" />
             <Icon v-else name="lucide:loader-circle" class="h-4 w-4 mr-2 animate-spin" />
-            {{ importing ? 'Розбираємо файл...' : 'Імпортувати XML' }}
+            {{ importing ? `Розбираємо файл... ${importProgress}` : 'Імпортувати XML' }}
           </Button>
           <p class="text-sm text-muted-foreground">
             Фід у форматі Google Merchant RSS (&lt;rss&gt;&lt;channel&gt;&lt;item&gt;...). Нічого не публікується одразу — спочатку відкриється попередній перегляд.
@@ -508,32 +508,68 @@ async function saveEdit() {
 const router = useRouter()
 const importInput = ref<HTMLInputElement>()
 const importing = ref(false)
+const importProgress = ref(0)
 const importState = useProductImportState()
+
+type ImportStreamRow = Omit<ProductImportRow, 'imagesTouched'>
+type ImportStreamMessage =
+  | { type: 'stats'; stats: ProductImportStats }
+  | { type: 'row'; row: ImportStreamRow }
 
 async function onImportFileChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
 
   importing.value = true
+  importProgress.value = 0
   try {
     const formData = new FormData()
     formData.append('file', file)
-    const result = await $fetch<{ rows: ProductImportRow[]; stats: ProductImportStats }>('/api/products/import/parse', {
-      method: 'POST',
-      body: formData,
-    })
-    importState.value = {
-      rows: result.rows.map(row => ({ ...row, imagesTouched: false })),
-      stats: result.stats,
+
+    // Сервер стрімить NDJSON (по одному товару на рядок) замість одного величезного JSON —
+    // читаємо це тут по мірі надходження, щоб не тримати весь фід у памʼяті окремим шматком.
+    const response = await fetch('/api/products/import/parse', { method: 'POST', body: formData })
+    if (!response.ok) {
+      const body = await response.json().catch(() => null) as { message?: string } | null
+      throw new Error(body?.message ?? 'Не вдалося розпарсити файл')
     }
+    if (!response.body) throw new Error('Порожня відповідь сервера')
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    const rows: ProductImportRow[] = []
+    let stats: ProductImportStats = { total: 0, new: 0, updating: 0, duplicatesSkipped: 0 }
+
+    const consumeLine = (line: string) => {
+      if (!line.trim()) return
+      const message = JSON.parse(line) as ImportStreamMessage
+      if (message.type === 'stats') {
+        stats = message.stats
+      } else {
+        rows.push({ ...message.row, imagesTouched: false })
+        importProgress.value = rows.length
+      }
+    }
+
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      buffer = lines.pop() ?? ''
+      lines.forEach(consumeLine)
+    }
+    if (buffer.trim()) consumeLine(buffer)
+
+    importState.value = { rows, stats }
     await router.push('/admin/products/import')
   } catch (error) {
-    const description = error && typeof error === 'object' && 'data' in error
-      ? (error as { data?: { message?: string } }).data?.message
-      : undefined
+    const description = error instanceof Error ? error.message : undefined
     toast.error('Помилка імпорту', { description: description ?? 'Не вдалося розпарсити файл' })
   } finally {
     importing.value = false
+    importProgress.value = 0
     if (importInput.value) importInput.value.value = ''
   }
 }

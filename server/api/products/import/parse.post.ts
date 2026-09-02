@@ -1,29 +1,7 @@
-import { XMLParser } from 'fast-xml-parser'
 import { requireAuth } from '../../../utils/auth'
 import { generateUniqueSlug } from '../../../utils/slug'
 import { parsePriceWithCurrency, extractShortDescriptionFromHtml, sanitizeDescriptionHtml, appendSpecsHtml } from '../../../utils/productImport'
-
-// Формат фіда: Google Merchant RSS <rss><channel><item g:id="..."><g:title>...
-interface GoogleRssItem {
-  id?: string
-  title?: string
-  description?: string
-  image_link?: string
-  additional_image_link?: string | string[]
-  price?: string
-  availability?: string
-  product_detail?: { product_name?: string; product_value?: string } | { product_name?: string; product_value?: string }[]
-}
-
-interface NormalizedItem {
-  article: string
-  name: string
-  price: number | null
-  inStock: boolean
-  shortDescription: string
-  longDescriptionHtml: string
-  images: string[] // впорядковані URL, перший — головний
-}
+import { streamRssItems } from '../../../utils/xmlItemStream'
 
 export interface ImportPreviewRow {
   article: string
@@ -38,40 +16,18 @@ export interface ImportPreviewRow {
   existingId: number | null
 }
 
-function isHttpUrl(value: unknown): value is string {
-  return typeof value === 'string' && /^https?:\/\//i.test(value.trim())
+interface BestArticle {
+  price: number | null
+  keeperOccurrence: number
 }
 
-function toArray<T>(value: T | T[] | undefined): T[] {
-  if (value === undefined) return []
-  return Array.isArray(value) ? value : [value]
+function isHttpUrl(value: string): boolean {
+  return /^https?:\/\//i.test(value.trim())
 }
 
-function normalizeItems(parsed: { rss?: { channel?: { item?: GoogleRssItem | GoogleRssItem[] } } }): NormalizedItem[] {
-  return toArray(parsed.rss?.channel?.item)
-    .map((item): NormalizedItem | null => {
-      const article = String(item.id ?? '').trim()
-      if (!article) return null
-
-      const rawHtml = (item.description ?? '').trim()
-      const details = toArray(item.product_detail)
-      const htmlWithSpecs = appendSpecsHtml(rawHtml, details)
-      const images = [item.image_link, ...toArray(item.additional_image_link)].filter(isHttpUrl)
-      const availability = String(item.availability ?? '').trim().toLowerCase()
-
-      return {
-        article,
-        name: (item.title ?? '').trim() || article,
-        price: parsePriceWithCurrency(item.price),
-        inStock: availability === 'in stock',
-        shortDescription: extractShortDescriptionFromHtml(rawHtml),
-        longDescriptionHtml: sanitizeDescriptionHtml(htmlWithSpecs),
-        images,
-      }
-    })
-    .filter((item): item is NormalizedItem => item !== null)
-}
-
+// Відповідь стрімиться по одному рядку NDJSON на товар (перший рядок — статистика) замість
+// одного великого JSON-обʼєкта з усіма 3000+ товарами одразу — на дроплеті з 1GB RAM
+// повна DOM-збірка такого фіда валила Node в heap out of memory.
 export default defineEventHandler(async (event) => {
   requireAuth(event)
 
@@ -79,89 +35,102 @@ export default defineEventHandler(async (event) => {
   const file = files?.[0]
   if (!file?.data) throw createError({ statusCode: 400, message: 'Файл не передано' })
 
-  const parser = new XMLParser({
-    ignoreAttributes: false,
-    attributeNamePrefix: '',
-    removeNSPrefix: true,
-    // За замовчуванням fast-xml-parser перетворює текст, що виглядає як число, на JS number
-    // (напр. <g:product_value>10</g:product_value> → 10) — вимикаємо, бо це ламає рядкові .replace() нижче.
-    parseTagValue: false,
-    parseAttributeValue: false,
-    isArray: (name) => ['item', 'additional_image_link', 'product_detail'].includes(name),
-  })
+  const xml = file.data.toString('utf-8')
 
-  let parsed: { rss?: { channel?: { item?: GoogleRssItem | GoogleRssItem[] } } }
+  // Прохід 1: лише артикул (g:id) + ціна — щоб дешево (без HTML/картинок у памʼяті)
+  // визначити дублікати за артикулом у межах файлу й лишити найдешевший варіант.
+  const bestByArticle = new Map<string, BestArticle>()
+  const occurrenceCountPass1 = new Map<string, number>()
+  let totalItems = 0
+
   try {
-    parsed = parser.parse(file.data.toString('utf-8'))
+    streamRssItems(xml, (raw) => {
+      totalItems += 1
+      const article = raw.id.trim()
+      if (!article) return
+
+      const occurrence = (occurrenceCountPass1.get(article) ?? 0) + 1
+      occurrenceCountPass1.set(article, occurrence)
+
+      const price = parsePriceWithCurrency(raw.price)
+      const best = bestByArticle.get(article)
+      if (!best) {
+        bestByArticle.set(article, { price, keeperOccurrence: occurrence })
+      } else if (price !== null && (best.price === null || price < best.price)) {
+        bestByArticle.set(article, { price, keeperOccurrence: occurrence })
+      }
+    })
   } catch {
     throw createError({ statusCode: 400, message: 'Не вдалося розпарсити XML' })
   }
 
-  if (!parsed.rss?.channel) {
-    throw createError({ statusCode: 400, message: 'Невідомий формат фіда — очікується Google Merchant RSS (<rss><channel><item>)' })
+  if (!totalItems) {
+    throw createError({
+      statusCode: 400,
+      message: 'У файлі не знайдено товарів — очікується Google Merchant RSS (<rss><channel><item>)',
+    })
   }
 
-  const normalized = normalizeItems(parsed)
-  if (!normalized.length) {
-    throw createError({ statusCode: 400, message: 'У файлі не знайдено товарів' })
-  }
+  const articles = [...bestByArticle.keys()]
+  const duplicatesSkipped = totalItems - articles.length
 
-  // Дублікати за артикулом (g:id) в межах самого файлу — лишаємо найдешевший
-  const byArticle = new Map<string, NormalizedItem>()
-  let duplicatesSkipped = 0
-  for (const item of normalized) {
-    const existing = byArticle.get(item.article)
-    if (!existing) {
-      byArticle.set(item.article, item)
-      continue
-    }
-
-    duplicatesSkipped += 1
-    if (item.price !== null && (existing.price === null || item.price < existing.price)) {
-      byArticle.set(item.article, item)
-    }
-  }
-
-  const articles = [...byArticle.keys()]
   const existingProducts = await prisma.product.findMany({
     where: { article: { in: articles } },
     include: { categories: { take: 1 }, images: { orderBy: { sortOrder: 'asc' } } },
   })
   const existingByArticle = new Map(existingProducts.filter((p) => p.article).map((p) => [p.article as string, p]))
-
   const takenSlugs = new Set((await prisma.product.findMany({ select: { slug: true } })).map((p) => p.slug))
 
-  const rows: ImportPreviewRow[] = articles.map((article) => {
-    const item = byArticle.get(article)!
+  setResponseHeader(event, 'Content-Type', 'application/x-ndjson; charset=utf-8')
+  event.node.res.write(`${JSON.stringify({
+    type: 'stats',
+    stats: {
+      total: articles.length,
+      new: articles.filter((a) => !existingByArticle.has(a)).length,
+      updating: articles.filter((a) => existingByArticle.has(a)).length,
+      duplicatesSkipped,
+    },
+  })}\n`)
+
+  // Прохід 2: повна обробка (санітизація опису, картинки, slug) — по одному товару за раз,
+  // одразу пишемо в потік відповіді й переходимо до наступного, не накопичуючи масив із 3000+ рядків.
+  const occurrenceCountPass2 = new Map<string, number>()
+
+  streamRssItems(xml, (raw) => {
+    const article = raw.id.trim()
+    if (!article) return
+
+    const occurrence = (occurrenceCountPass2.get(article) ?? 0) + 1
+    occurrenceCountPass2.set(article, occurrence)
+
+    const best = bestByArticle.get(article)
+    if (!best || best.keeperOccurrence !== occurrence) return // програв дублікат — пропускаємо
+
     const existing = existingByArticle.get(article) ?? null
+    const rawHtml = raw.description.trim()
+    const htmlWithSpecs = appendSpecsHtml(
+      rawHtml,
+      raw.productDetails.map((d) => ({ product_name: d.name, product_value: d.value })),
+    )
+    const images = [raw.imageLink, ...raw.additionalImageLinks].filter(isHttpUrl)
 
-    // Для товару, що вже є в базі — показуємо його поточну галерею (щоб не загубити фото при оновленні ціни/опису).
-    // Для нового товару — підставляємо картинки з фіда.
-    const images = existing
-      ? existing.images.map((img) => ({ url: img.url, isMain: img.isMain, sortOrder: img.sortOrder }))
-      : item.images.map((url, i) => ({ url, isMain: i === 0, sortOrder: i }))
-
-    return {
+    const row: ImportPreviewRow = {
       article,
-      name: item.name,
-      slug: existing?.slug ?? generateUniqueSlug(item.name, takenSlugs),
-      price: item.price,
-      inStock: item.inStock,
-      description: item.shortDescription,
-      longDescription: item.longDescriptionHtml,
-      images,
+      name: raw.title.trim() || article,
+      slug: existing?.slug ?? generateUniqueSlug(raw.title.trim() || article, takenSlugs),
+      price: best.price,
+      inStock: raw.availability.trim().toLowerCase() === 'in stock',
+      description: extractShortDescriptionFromHtml(rawHtml),
+      longDescription: sanitizeDescriptionHtml(htmlWithSpecs),
+      images: existing
+        ? existing.images.map((img) => ({ url: img.url, isMain: img.isMain, sortOrder: img.sortOrder }))
+        : images.map((url, i) => ({ url, isMain: i === 0, sortOrder: i })),
       categoryId: existing?.categories[0]?.id ?? null,
       existingId: existing?.id ?? null,
     }
+
+    event.node.res.write(`${JSON.stringify({ type: 'row', row })}\n`)
   })
 
-  return {
-    rows,
-    stats: {
-      total: rows.length,
-      new: rows.filter((r) => !r.existingId).length,
-      updating: rows.filter((r) => r.existingId).length,
-      duplicatesSkipped,
-    },
-  }
+  event.node.res.end()
 })
