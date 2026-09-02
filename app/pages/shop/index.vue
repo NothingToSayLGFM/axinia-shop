@@ -223,6 +223,7 @@ const visiblePages = computed(() => {
             variant="outline"
             size="icon"
             :disabled="page === 1"
+            aria-label="Попередня сторінка"
             @click="page--"
           >
             <Icon name="lucide:chevron-left" class="h-4 w-4" />
@@ -245,6 +246,7 @@ const visiblePages = computed(() => {
             variant="outline"
             size="icon"
             :disabled="page === totalPages"
+            aria-label="Наступна сторінка"
             @click="page++"
           >
             <Icon name="lucide:chevron-right" class="h-4 w-4" />

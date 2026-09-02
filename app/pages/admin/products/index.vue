@@ -105,12 +105,32 @@
       </CardContent>
     </Card>
 
+    <!-- Import from XML -->
+    <Card>
+      <CardHeader>
+        <CardTitle as="h2" class="text-base">Імпорт товарів з XML</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div class="flex items-center gap-3">
+          <Button type="button" variant="outline" :disabled="importing" @click="importInput?.click()">
+            <Icon v-if="!importing" name="lucide:upload" class="h-4 w-4 mr-2" />
+            <Icon v-else name="lucide:loader-circle" class="h-4 w-4 mr-2 animate-spin" />
+            {{ importing ? 'Розбираємо файл...' : 'Імпортувати XML' }}
+          </Button>
+          <p class="text-sm text-muted-foreground">
+            Фід у форматі Google Merchant RSS (&lt;rss&gt;&lt;channel&gt;&lt;item&gt;...). Нічого не публікується одразу — спочатку відкриється попередній перегляд.
+          </p>
+          <input ref="importInput" type="file" accept=".xml,text/xml" class="hidden" @change="onImportFileChange" />
+        </div>
+      </CardContent>
+    </Card>
+
     <!-- Filters -->
     <Card>
       <CardContent class="pt-4 pb-3">
         <div class="flex flex-wrap gap-3">
           <div class="flex-1 min-w-52">
-            <Input v-model="filterSearch" placeholder="Пошук по назві або артикулу..." />
+            <Input v-model="searchInput" placeholder="Пошук по назві або артикулу..." />
           </div>
           <Select v-model="filterCategoryId">
             <SelectTrigger class="w-48" aria-label="Фільтр за категорією">
@@ -140,9 +160,7 @@
     <!-- Table -->
     <Card>
       <CardHeader>
-        <CardTitle as="h2" class="text-base">
-          Усі товари ({{ filteredProducts.length }}{{ filteredProducts.length !== (products?.length ?? 0) ? ` з ${products?.length ?? 0}` : '' }})
-        </CardTitle>
+        <CardTitle as="h2" class="text-base">Усі товари ({{ total }})</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
@@ -158,12 +176,12 @@
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-if="!filteredProducts.length">
+            <TableRow v-if="!products.length">
               <TableCell colspan="7" class="text-center text-muted-foreground py-8">
-                {{ products?.length ? 'Нічого не знайдено' : 'Товарів ще немає' }}
+                {{ total ? 'Нічого не знайдено' : 'Товарів ще немає' }}
               </TableCell>
             </TableRow>
-            <TableRow v-for="product in filteredProducts" :key="product.id">
+            <TableRow v-for="product in products" :key="product.id">
               <TableCell class="text-muted-foreground">{{ product.id }}</TableCell>
               <TableCell class="font-medium">{{ product.name ?? '—' }}</TableCell>
               <TableCell class="font-mono text-sm text-muted-foreground">{{ product.article ?? '—' }}</TableCell>
@@ -194,6 +212,21 @@
             </TableRow>
           </TableBody>
         </Table>
+
+        <div v-if="totalPages > 1" class="mt-6 flex items-center justify-center gap-1">
+          <Button variant="outline" size="icon" :disabled="page === 1" aria-label="Попередня сторінка" @click="page--">
+            <Icon name="lucide:chevron-left" class="h-4 w-4" />
+          </Button>
+          <template v-for="p in visiblePages" :key="p">
+            <span v-if="p === '...'" class="px-2 text-muted-foreground text-sm">…</span>
+            <Button v-else :variant="page === p ? 'default' : 'outline'" size="icon" @click="page = Number(p)">
+              {{ p }}
+            </Button>
+          </template>
+          <Button variant="outline" size="icon" :disabled="page === totalPages" aria-label="Наступна сторінка" @click="page++">
+            <Icon name="lucide:chevron-right" class="h-4 w-4" />
+          </Button>
+        </div>
       </CardContent>
     </Card>
   </div>
@@ -309,6 +342,7 @@
 <script setup lang="ts">
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { toast } from 'vue-sonner'
+import type { ProductImportRow, ProductImportStats } from '~/composables/useProductImport'
 
 interface Category { id: number; name: string; slug: string }
 interface ProductImage { id: number; url: string; isMain: boolean; sortOrder: number }
@@ -329,30 +363,50 @@ interface Product {
 
 definePageMeta({ layout: 'admin' })
 
-const { data: rawProducts, refresh } = await useFetch('/api/products')
-const products = computed(() => rawProducts.value as unknown as Product[])
+const PAGE_SIZE = 20
+
 const { data: categories } = await useFetch('/api/categories')
 
-const filterSearch = ref('')
+const searchInput = ref('')
+const search = ref('')
 const filterCategoryId = ref('all')
 const filterStatus = ref('all')
+const page = ref(1)
 
-const filteredProducts = computed(() => {
-  let result = products.value ?? []
-  if (filterSearch.value) {
-    const q = filterSearch.value.toLowerCase()
-    result = result.filter(p =>
-      p.name?.toLowerCase().includes(q) || p.article?.toLowerCase().includes(q)
-    )
-  }
-  if (filterCategoryId.value !== 'all') {
-    const id = Number(filterCategoryId.value)
-    result = result.filter(p => p.categories.some(c => c.id === id))
-  }
-  if (filterStatus.value !== 'all') {
-    result = result.filter(p => filterStatus.value === 'active' ? p.isActive : !p.isActive)
-  }
-  return result
+let searchDebounce: ReturnType<typeof setTimeout>
+watch(searchInput, (val) => {
+  clearTimeout(searchDebounce)
+  searchDebounce = setTimeout(() => {
+    search.value = val
+    page.value = 1
+  }, 400)
+})
+
+watch([filterCategoryId, filterStatus], () => { page.value = 1 })
+
+const productsQuery = computed(() => ({
+  page: page.value,
+  limit: PAGE_SIZE,
+  ...(search.value && { search: search.value }),
+  ...(filterCategoryId.value !== 'all' && { categoryId: filterCategoryId.value }),
+  ...(filterStatus.value !== 'all' && { status: filterStatus.value }),
+}))
+
+const { data: result, refresh } = await useFetch<{ items: Product[]; total: number }>('/api/products/admin', {
+  query: productsQuery,
+})
+
+const products = computed(() => result.value?.items ?? [])
+const total = computed(() => result.value?.total ?? 0)
+const totalPages = computed(() => Math.max(1, Math.ceil(total.value / PAGE_SIZE)))
+
+const visiblePages = computed(() => {
+  const totalP = totalPages.value
+  const current = page.value
+  if (totalP <= 7) return Array.from({ length: totalP }, (_, i) => i + 1)
+  if (current <= 4) return [1, 2, 3, 4, 5, '...', totalP]
+  if (current >= totalP - 3) return [1, '...', totalP - 4, totalP - 3, totalP - 2, totalP - 1, totalP]
+  return [1, '...', current - 1, current, current + 1, '...', totalP]
 })
 
 const saving = ref(false)
@@ -448,6 +502,39 @@ async function saveEdit() {
     toast.error('Помилка', { description: 'Не вдалося зберегти товар' })
   } finally {
     editSaving.value = false
+  }
+}
+
+const router = useRouter()
+const importInput = ref<HTMLInputElement>()
+const importing = ref(false)
+const importState = useProductImportState()
+
+async function onImportFileChange(e: Event) {
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
+  importing.value = true
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+    const result = await $fetch<{ rows: ProductImportRow[]; stats: ProductImportStats }>('/api/products/import/parse', {
+      method: 'POST',
+      body: formData,
+    })
+    importState.value = {
+      rows: result.rows.map(row => ({ ...row, imagesTouched: false })),
+      stats: result.stats,
+    }
+    await router.push('/admin/products/import')
+  } catch (error) {
+    const description = error && typeof error === 'object' && 'data' in error
+      ? (error as { data?: { message?: string } }).data?.message
+      : undefined
+    toast.error('Помилка імпорту', { description: description ?? 'Не вдалося розпарсити файл' })
+  } finally {
+    importing.value = false
+    if (importInput.value) importInput.value.value = ''
   }
 }
 </script>

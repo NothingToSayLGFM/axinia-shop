@@ -3,15 +3,30 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { toast } from 'vue-sonner'
+import type { Product, Category } from '@/types/product'
 
 const route = useRoute()
 const router = useRouter()
 const categorySlug = route.params.category as string
 
-const { data: category, error: categoryError } = await useFetch(`/api/categories/slug/${categorySlug}`)
+const { data: category, error: categoryError } = await useFetch<Category>(`/api/categories/slug/${categorySlug}`, {
+  key: `category-${categorySlug}`,
+})
+
+// URL має один сегмент після /shop/, і категорія, і товар без категорії виглядають однаково —
+// якщо категорію не знайдено, пробуємо той самий слаг як слаг товару, перш ніж віддавати 404.
+const fallbackProduct = ref<Product | null>(null)
 if (categoryError.value) {
-  throw createError({ statusCode: 404, message: 'Категорію не знайдено' })
+  const { data: productData, error: productError } = await useFetch(`/api/products/slug/${categorySlug}`, {
+    key: `product-fallback-${categorySlug}`,
+  })
+  if (productError.value) {
+    throw createError({ statusCode: 404, message: 'Сторінку не знайдено' })
+  }
+  fallbackProduct.value = productData.value ?? null
 }
+
+const isProductFallback = computed(() => !!fallbackProduct.value)
 
 const searchInput = ref((route.query.search as string) || '')
 const sort = ref((route.query.sort as string) || '')
@@ -37,7 +52,7 @@ const productsQuery = computed(() => ({
   ...(sort.value && { sort: sort.value }),
 }))
 
-const { data: result, status, error: productsError } = await useFetch('/api/products', {
+const { data: result, status, error: productsError } = await useFetch<{ items: Product[]; total: number }>('/api/products', {
   query: productsQuery,
 })
 
@@ -50,14 +65,14 @@ watch(productsError, (err) => {
   }
 })
 
-const products = computed(() => (result.value as any)?.items ?? [])
-const total = computed(() => (result.value as any)?.total ?? 0)
+const products = computed(() => result.value?.items ?? [])
+const total = computed(() => result.value?.total ?? 0)
 const totalPages = computed(() => Math.ceil(total.value / 10))
 
 const minPrice = computed(() => {
   const prices = products.value
-    .map((p: any) => p.price ? Number(p.price) : null)
-    .filter((p: number | null): p is number => p !== null && p > 0)
+    .map((p) => p.price ? Number(p.price) : null)
+    .filter((p): p is number => p !== null && p > 0)
   return prices.length ? Math.min(...prices) : null
 })
 const pending = computed(() => status.value === 'pending')
@@ -92,7 +107,7 @@ const visiblePages = computed(() => {
   return [1, '...', c - 1, c, c + 1, '...', t]
 })
 
-const categoryName = computed(() => (category.value as any)?.name ?? '')
+const categoryName = computed(() => category.value?.name ?? '')
 
 useSchemaOrg([
   defineBreadcrumb({
@@ -114,23 +129,25 @@ useSeoMeta({
     return `Купити ${name} в Аксінья-Маркет.${countStr}${priceStr} Доставка по Україні.`
   }),
   ogType: 'website',
-  ogImage: computed(() => (category.value as any)?.image ?? '/images/logo.webp'),
+  ogImage: computed(() => category.value?.image ?? '/images/logo.webp'),
   twitterCard: 'summary_large_image',
 })
 </script>
 
 <template>
-  <CommonContainer class="py-8">
+  <ProductsDetail v-if="isProductFallback" :product="fallbackProduct" :category-slug="null" :category-name="null" />
+
+  <CommonContainer v-else class="py-8">
     <!-- Breadcrumbs -->
     <nav class="mb-6 flex items-center gap-2 text-sm text-muted-foreground" aria-label="Хлібні крихти">
       <NuxtLink to="/" class="hover:text-foreground transition-colors">Головна</NuxtLink>
       <span>›</span>
       <NuxtLink to="/shop" class="hover:text-foreground transition-colors">Товари</NuxtLink>
       <span>›</span>
-      <span class="text-foreground">{{ (category as any)?.name }}</span>
+      <span class="text-foreground">{{ category?.name }}</span>
     </nav>
 
-    <h1 class="mb-6 text-2xl font-bold sm:text-3xl">{{ (category as any)?.name }}</h1>
+    <h1 class="mb-6 text-2xl font-bold sm:text-3xl">{{ category?.name }}</h1>
 
     <!-- Поиск + сортировка -->
     <div class="flex gap-3 mb-6">
@@ -187,7 +204,7 @@ useSeoMeta({
 
     <!-- Пагинация -->
     <div v-if="totalPages > 1" class="mt-8 flex items-center justify-center gap-1">
-      <Button variant="outline" size="icon" :disabled="page === 1" @click="page--">
+      <Button variant="outline" size="icon" :disabled="page === 1" aria-label="Попередня сторінка" @click="page--">
         <Icon name="lucide:chevron-left" class="h-4 w-4" />
       </Button>
       <template v-for="p in visiblePages" :key="p">
@@ -200,7 +217,7 @@ useSeoMeta({
           @click="page = Number(p)"
         >{{ p }}</Button>
       </template>
-      <Button variant="outline" size="icon" :disabled="page === totalPages" @click="page++">
+      <Button variant="outline" size="icon" :disabled="page === totalPages" aria-label="Наступна сторінка" @click="page++">
         <Icon name="lucide:chevron-right" class="h-4 w-4" />
       </Button>
     </div>

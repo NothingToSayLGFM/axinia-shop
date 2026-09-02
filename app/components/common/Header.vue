@@ -31,10 +31,10 @@ function handleSearchClick() {
       <div class="flex h-20 items-center justify-between gap-4">
 
         <!-- Лого + Название -->
-        <NuxtLink to="/" class="flex shrink-0 items-center gap-3 focus:outline-none">
+        <NuxtLink to="/" class="flex shrink-0 items-center gap-3 focus:outline-none" aria-label="Аксінья-Маркет — на головну">
           <NuxtImg
             src="/images/logo.webp"
-            alt="Аксінья-Маркет"
+            alt=""
             format="webp"
             quality="85"
             width="88"

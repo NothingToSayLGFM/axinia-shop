@@ -67,6 +67,7 @@ const pageTitles: Record<string, string> = {
   '/admin/orders': 'Замовлення',
   '/admin/reviews': 'Відгуки',
   '/admin/info': 'Інформація',
+  '/admin/products/import': 'Попередній перегляд імпорту',
 }
 
 const pageTitle = computed(() => pageTitles[route.path] ?? 'Адмінка')
