@@ -5,7 +5,6 @@ const props = defineProps<{
   name: string
 }>()
 
-const isUpload = computed(() => props.image?.startsWith('/uploads/'))
 const imgClass = computed(() =>
   props.image
     ? 'absolute inset-0 h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-110'
@@ -18,16 +17,7 @@ const imgClass = computed(() =>
     :to="to"
     class="group relative overflow-hidden rounded-xl bg-muted aspect-[4/3] block"
   >
-    <img
-      v-if="isUpload"
-      :src="image!"
-      alt=""
-      role="presentation"
-      loading="lazy"
-      :class="imgClass"
-    />
     <NuxtImg
-      v-else
       :src="image || '/images/logo.webp'"
       alt=""
       role="presentation"

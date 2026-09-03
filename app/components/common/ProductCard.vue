@@ -50,15 +50,8 @@ function addToCart() {
 <template>
   <Card class="group overflow-hidden pt-0 flex flex-col">
     <NuxtLink :to="productUrl" :aria-label="name ?? 'Переглянути товар'" class="relative overflow-hidden aspect-[4/3] bg-muted cursor-pointer block">
-      <img
-        v-if="mainImage?.startsWith('/uploads/')"
-        :src="mainImage"
-        :alt="name ?? ''"
-        loading="lazy"
-        class="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
-      />
       <NuxtImg
-        v-else-if="mainImage"
+        v-if="mainImage"
         :src="mainImage"
         :alt="name ?? ''"
         format="webp"

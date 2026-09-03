@@ -1,14 +1,11 @@
 import { readFile } from 'fs/promises'
-import { join } from 'path'
+import { join, normalize } from 'path'
 
 export default defineEventHandler(async (event) => {
   const path = getRouterParam(event, 'path')
-  if (!path) throw createError({ statusCode: 404 })
+  if (!path || normalize(path).startsWith('..')) throw createError({ statusCode: 404 })
 
-  const isProd = process.env.NODE_ENV === 'production'
-  const uploadsDir = isProd
-    ? join(process.cwd(), '.output', 'public', 'uploads')
-    : join(process.cwd(), 'public', 'uploads')
+  const uploadsDir = getUploadsDir()
 
   try {
     const data = await readFile(join(uploadsDir, path))

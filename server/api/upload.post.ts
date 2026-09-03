@@ -35,10 +35,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Only images allowed' })
   }
 
-  const isProd = process.env.NODE_ENV === 'production'
-  const uploadsDir = isProd
-    ? join(process.cwd(), '.output', 'public', 'uploads')
-    : join(process.cwd(), 'public', 'uploads')
+  const uploadsDir = getUploadsDir()
 
   await mkdir(uploadsDir, { recursive: true })
 

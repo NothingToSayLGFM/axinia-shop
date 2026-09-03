@@ -10,7 +10,7 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - axinia_uploads:/app/.output/public/uploads
+      - axinia_uploads:/app/output/public/uploads
 
   db:
     image: postgres:17-alpine

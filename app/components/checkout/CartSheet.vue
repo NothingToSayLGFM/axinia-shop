@@ -92,14 +92,8 @@ const totalLabel = computed(() => {
         >
           <!-- Thumbnail -->
           <div class="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-muted">
-            <img
-              v-if="item.image?.startsWith('/uploads/')"
-              :src="item.image"
-              :alt="item.name"
-              class="h-full w-full object-contain"
-            />
             <NuxtImg
-              v-else-if="item.image"
+              v-if="item.image"
               :src="item.image"
               :alt="item.name"
               class="h-full w-full object-contain"
