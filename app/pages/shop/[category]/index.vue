@@ -13,20 +13,11 @@ const { data: category, error: categoryError } = await useFetch<Category>(`/api/
   key: `category-${categorySlug}`,
 })
 
-// URL має один сегмент після /shop/, і категорія, і товар без категорії виглядають однаково —
-// якщо категорію не знайдено, пробуємо той самий слаг як слаг товару, перш ніж віддавати 404.
-const fallbackProduct = ref<Product | null>(null)
+// Товар живе виключно за /shop/:category/:slug — категорія обовʼязкова при імпорті й створенні,
+// тож невідомий слаг тут це просто неіснуюча сторінка (без зайвого пошуку товару на кожен запит бота).
 if (categoryError.value) {
-  const { data: productData, error: productError } = await useFetch(`/api/products/slug/${categorySlug}`, {
-    key: `product-fallback-${categorySlug}`,
-  })
-  if (productError.value) {
-    throw createError({ statusCode: 404, message: 'Сторінку не знайдено' })
-  }
-  fallbackProduct.value = productData.value ?? null
+  throw createError({ statusCode: 404, message: 'Сторінку не знайдено' })
 }
-
-const isProductFallback = computed(() => !!fallbackProduct.value)
 
 const searchInput = ref((route.query.search as string) || '')
 const sort = ref((route.query.sort as string) || '')
@@ -135,9 +126,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <ProductsDetail v-if="isProductFallback" :product="fallbackProduct" :category-slug="null" :category-name="null" />
-
-  <CommonContainer v-else class="py-8">
+  <CommonContainer class="py-8">
     <!-- Breadcrumbs -->
     <nav class="mb-6 flex items-center gap-2 text-sm text-muted-foreground" aria-label="Хлібні крихти">
       <NuxtLink to="/" class="hover:text-foreground transition-colors">Головна</NuxtLink>

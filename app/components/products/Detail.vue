@@ -32,6 +32,15 @@ const productUrl = computed(() => {
   return props.categorySlug ? `/shop/${props.categorySlug}/${slug}` : `/shop/${slug}`
 })
 
+// Канонічний URL — завжди варіант з категорією (навіть якщо товар відкрили інакше),
+// щоб варіації адреси не плодили дублікатів в індексі Google
+const siteUrl = useSiteConfig().url
+const canonicalUrl = computed(() => {
+  const slug = props.product?.slug ?? ''
+  const cat = productCategorySlug.value
+  return `${siteUrl.replace(/\/$/, '')}${cat ? `/shop/${cat}/${slug}` : `/shop/${slug}`}`
+})
+
 const cart = useCartStore()
 
 const buyButtonsRef = ref<HTMLElement | null>(null)
@@ -83,7 +92,12 @@ useSeoMeta({
   }),
   ogType: 'website',
   ogImage: computed(() => mainImage.value ?? '/images/logo.webp'),
+  ogUrl: canonicalUrl,
   twitterCard: 'summary_large_image',
+})
+
+useHead({
+  link: [{ rel: 'canonical', href: canonicalUrl }],
 })
 
 useSchemaOrg([
