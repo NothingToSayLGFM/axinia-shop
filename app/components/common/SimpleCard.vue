@@ -24,7 +24,6 @@ const imgClass = computed(() =>
       format="webp"
       quality="80"
       width="400"
-      height="300"
       sizes="100vw sm:50vw md:25vw"
       loading="lazy"
       :class="imgClass"

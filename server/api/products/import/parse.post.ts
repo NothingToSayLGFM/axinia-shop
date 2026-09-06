@@ -31,9 +31,18 @@ function isHttpUrl(value: string): boolean {
 export default defineEventHandler(async (event) => {
   requireAuth(event)
 
-  const files = await readMultipartFormData(event)
-  const file = files?.[0]
+  const parts = await readMultipartFormData(event)
+  const file = parts?.find((p) => p.name === 'file' && p.filename) ?? parts?.[0]
   if (!file?.data) throw createError({ statusCode: 400, message: 'Файл не передано' })
+
+  // Категорія за замовчуванням — проставляється всім товарам з фіда, у яких її ще немає
+  const rawCategoryId = parts?.find((p) => p.name === 'categoryId')?.data.toString('utf-8').trim()
+  const defaultCategoryId = Number(rawCategoryId)
+  if (!rawCategoryId || !Number.isInteger(defaultCategoryId)) {
+    throw createError({ statusCode: 400, message: 'Не вказано категорію для імпорту' })
+  }
+  const categoryExists = await prisma.category.findUnique({ where: { id: defaultCategoryId }, select: { id: true } })
+  if (!categoryExists) throw createError({ statusCode: 400, message: 'Вказана категорія не існує' })
 
   const xml = file.data.toString('utf-8')
 
@@ -125,7 +134,7 @@ export default defineEventHandler(async (event) => {
       images: existing
         ? existing.images.map((img) => ({ url: img.url, isMain: img.isMain, sortOrder: img.sortOrder }))
         : images.map((url, i) => ({ url, isMain: i === 0, sortOrder: i })),
-      categoryId: existing?.categories[0]?.id ?? null,
+      categoryId: existing?.categories[0]?.id ?? defaultCategoryId,
       existingId: existing?.id ?? null,
     }
 

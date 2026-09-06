@@ -112,13 +112,23 @@
       </CardHeader>
       <CardContent>
         <div class="flex items-center gap-3">
-          <Button type="button" variant="outline" :disabled="importing" @click="importInput?.click()">
+          <Button type="button" variant="outline" :disabled="importing || !importCategoryId" @click="importInput?.click()">
             <Icon v-if="!importing" name="lucide:upload" class="h-4 w-4 mr-2" />
             <Icon v-else name="lucide:loader-circle" class="h-4 w-4 mr-2 animate-spin" />
             {{ importing ? `Розбираємо файл... ${importProgress}` : 'Імпортувати XML' }}
           </Button>
+          <Select v-model="importCategoryId" :disabled="importing">
+            <SelectTrigger class="w-56 shrink-0" aria-label="Категорія для імпортованих товарів">
+              <SelectValue placeholder="Категорія (обов'язково)" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem v-for="cat in categories" :key="cat.id" :value="String(cat.id)">
+                {{ cat.name }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
           <p class="text-sm text-muted-foreground">
-            Фід у форматі Google Merchant RSS (&lt;rss&gt;&lt;channel&gt;&lt;item&gt;...). Нічого не публікується одразу — спочатку відкриється попередній перегляд.
+            Фід у форматі Google Merchant RSS (&lt;rss&gt;&lt;channel&gt;&lt;item&gt;...). Оберіть категорію — її отримають усі товари з файлу (окрім тих, у яких категорія вже проставлена). Нічого не публікується одразу — спочатку відкриється попередній перегляд.
           </p>
           <input ref="importInput" type="file" accept=".xml,text/xml" class="hidden" @change="onImportFileChange" />
         </div>
@@ -510,6 +520,8 @@ const importInput = ref<HTMLInputElement>()
 const importing = ref(false)
 const importProgress = ref(0)
 const importState = useProductImportState()
+// Категорія за замовчуванням для всіх товарів з файлу — обовʼязкова, без неї кнопка імпорту заблокована
+const importCategoryId = ref('')
 
 type ImportStreamRow = Omit<ProductImportRow, 'imagesTouched'>
 type ImportStreamMessage =
@@ -519,12 +531,17 @@ type ImportStreamMessage =
 async function onImportFileChange(e: Event) {
   const file = (e.target as HTMLInputElement).files?.[0]
   if (!file) return
+  if (!importCategoryId.value) {
+    toast.error('Оберіть категорію', { description: 'Категорія обовʼязкова для імпорту' })
+    return
+  }
 
   importing.value = true
   importProgress.value = 0
   try {
     const formData = new FormData()
     formData.append('file', file)
+    formData.append('categoryId', importCategoryId.value)
 
     // Сервер стрімить NDJSON (по одному товару на рядок) замість одного величезного JSON —
     // читаємо це тут по мірі надходження, щоб не тримати весь фід у памʼяті окремим шматком.

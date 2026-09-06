@@ -57,7 +57,6 @@ function addToCart() {
         format="webp"
         quality="80"
         width="400"
-        height="300"
         sizes="100vw sm:50vw md:33vw"
         loading="lazy"
         class="h-full w-full object-contain transition-transform duration-500 ease-out group-hover:scale-105"
